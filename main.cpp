@@ -9,40 +9,40 @@ class Student {
 
     private:
     int roll_Id;
-    string studentName;
+    string name;
     string branch;
-    string studentPassword;
+    string password;
 
     public:
 
     // Student constructor
 
-    Student(int roll_id, string studentName, string branch, string studentPassword) {   
+    Student(int roll_id, string name, string branch, string password) {   
         this -> roll_Id = roll_Id;
-        this -> studentName = studentName;
+        this -> name = name;
         this -> branch = branch;
-        this -> studentPassword = studentPassword;
+        this -> password = password;
     }
 
     static Student getStudentObjFromUser() {
         int roll_Id;
-        string studentName;
+        string name;
         string branch;
-        string studentPassword;
+        string password;
 
         cout << "Enter your roll no: "<<endl;
         cin  >> roll_Id;
 
         cout << "Enter your name: "<<endl;
-        cin  >> studentName;
+        cin  >> name;
 
         cout << "Enter your branch: "<<endl;
         cin  >> branch;
 
         cout << "Enter your password: "<<endl;
-        cin  >> studentPassword; 
+        cin  >> password; 
 
-        return Student(roll_Id, studentName, branch, studentPassword);
+        return Student(roll_Id, name, branch, password);
     }
 
     static string ObjToStr(Student obj) {
