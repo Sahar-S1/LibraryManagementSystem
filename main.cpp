@@ -21,11 +21,11 @@ template <typename T> string NumberToString ( T num ) {
 
 vector<string> split (const string &s, char delim) {
     vector<string> result;
-    stringstream ss (s);
+    istringstream ss (s);
     string item;
 
     while (getline (ss, item, delim)) {
-        result.push_back (item);
+        result.push_back(item);
     }
 
     return result;
