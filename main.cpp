@@ -45,7 +45,7 @@ class Student {
         return Student(roll_Id, studentName, branch, studentPassword);
     }
 
-    static String ObjToStr(Student obj) {
+    static string ObjToStr(Student obj) {
         return  "";
     }
 
