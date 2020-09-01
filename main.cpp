@@ -1,14 +1,43 @@
 #include <iostream>
+#include <sstream>
 #include <string>
+#include <vector>
 
 using namespace std;
+
+
+template <typename T> T StringToNumber (const string &str) {
+    istringstream ss(str);
+    T num;
+    ss >> num;
+    return num;
+}
+
+template <typename T> string NumberToString ( T num ) {
+    ostringstream ss;
+    ss << num;
+    return ss.str();
+}
+
+vector<string> split (const string &s, char delim) {
+    vector<string> result;
+    stringstream ss (s);
+    string item;
+
+    while (getline (ss, item, delim)) {
+        result.push_back (item);
+    }
+
+    return result;
+}
+
 
 /* Student class => Start */ 
 
 class Student {
 
-    private:
-    int roll_Id;
+    public:
+    string roll_Id;
     string name;
     string branch;
     string password;
@@ -17,7 +46,7 @@ class Student {
 
     // Student constructor
 
-    Student(int roll_id, string name, string branch, string password) {   
+    Student(string roll_Id, string name, string branch, string password) {   
         this -> roll_Id = roll_Id;
         this -> name = name;
         this -> branch = branch;
@@ -25,28 +54,46 @@ class Student {
     }
 
     static Student getStudentObjFromUser() {
-        int roll_Id;
+        string roll_Id;
         string name;
         string branch;
         string password;
 
-        cout << "Enter your roll no: "<<endl;
-        cin  >> roll_Id;
+        cout << "Enter your roll no: ";
+        getline(cin, roll_Id);
 
-        cout << "Enter your name: "<<endl;
-        cin  >> name;
+        cout << "Enter your name: ";
+        getline(cin, name);
 
-        cout << "Enter your branch: "<<endl;
-        cin  >> branch;
+        cout << "Enter your branch: ";
+        getline(cin, branch);
 
-        cout << "Enter your password: "<<endl;
-        cin  >> password; 
+        cout << "Enter your password: ";
+        getline(cin, password);
 
-        return Student(roll_Id, name, branch, password);
+        Student obj(roll_Id, name, branch, password);
+        return obj;
     }
 
     static string ObjToStr(Student obj) {
-        return  "";
+        string str = "";
+        str += obj.roll_Id; 
+        str += ',' + obj.name;
+        str += ',' + obj.branch;
+        str += ',' + obj.password;
+        return  str;
+    }
+
+    static Student StrToObj(string str) {
+        vector<string> studentAttr = split(str, ',');
+
+        string roll_Id = studentAttr[0];
+        string name = studentAttr[1];
+        string branch = studentAttr[2];
+        string password = studentAttr[3];
+        
+        Student obj(roll_Id, name, branch, password);
+        return obj;
     }
 
 };
@@ -54,7 +101,13 @@ class Student {
 /* Student class => End */ 
 
 int main(){
-
     Student s1 = Student::getStudentObjFromUser();
+
+    string str = Student::ObjToStr(s1);
+    cout << str;
+
+    Student s1Copy = Student::StrToObj(str);
+    cout << Student::ObjToStr(s1Copy);
+
     return 0;
 }
