@@ -104,10 +104,10 @@ int main(){
     Student s1 = Student::getStudentObjFromUser();
 
     string str = Student::ObjToStr(s1);
-    cout << str;
+    cout << str << endl;
 
     Student s1Copy = Student::StrToObj(str);
-    cout << Student::ObjToStr(s1Copy);
+    cout << Student::ObjToStr(s1Copy) << endl;
 
     return 0;
 }
