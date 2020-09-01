@@ -1,8 +1,9 @@
-#include<iostream>
+#include <iostream>
+#include <string>
 
 using namespace std;
 
-// Student class  
+/* Student class => Start */ 
 
 class Student {
 
@@ -10,32 +11,50 @@ class Student {
     int roll_Id;
     string studentName;
     string branch;
-    int studentPassword;
+    string studentPassword;
 
     public:
 
-// Student constructor
+    // Student constructor
 
-    Student(){
+    Student(int roll_id, string studentName, string branch, string studentPassword) {   
+        this -> roll_Id = roll_Id;
+        this -> studentName = studentName;
+        this -> branch = branch;
+        this -> studentPassword = studentPassword;
+    }
 
-            cout << "Enter your roll no: "<<endl;
-            cin  >> roll_Id;
+    static Student getStudentObjFromUser() {
+        int roll_Id;
+        string studentName;
+        string branch;
+        string studentPassword;
 
-            cout << "Enter your name: "<<endl;
-            cin  >> studentName;
+        cout << "Enter your roll no: "<<endl;
+        cin  >> roll_Id;
 
-            cout << "Enter your branch: "<<endl;
-            cin  >> branch;
+        cout << "Enter your name: "<<endl;
+        cin  >> studentName;
 
-            cout << "Enter your password: "<<endl;
-            cin  >> studentPassword;       
+        cout << "Enter your branch: "<<endl;
+        cin  >> branch;
 
-    }  
+        cout << "Enter your password: "<<endl;
+        cin  >> studentPassword; 
+
+        return Student(roll_Id, studentName, branch, studentPassword);
+    }
+
+    static String ObjToStr(Student obj) {
+        return  "";
+    }
 
 };
 
+/* Student class => End */ 
+
 int main(){
 
-    Student s1;
+    Student s1 = Student::getStudentObjFromUser();
     return 0;
 }
