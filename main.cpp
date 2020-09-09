@@ -53,7 +53,7 @@ class Student {
         this -> password = password;
     }
 
-    static Student getStudentObjFromUser() {
+    static Student getStudentObjDetailsFromUser() {
         string roll_Id;
         string name;
         string branch;
@@ -129,13 +129,20 @@ class Student {
 /* Student class => End */ 
 
 int main(){
-    Student s1 = Student::getStudentObjFromUser();
+    Student s1 = Student::getStudentObjDetailsFromUser();
 
     string str = Student::objToStr(s1);
     cout << str << endl;
 
     Student s1Copy = Student::strToObj(str);
     cout << Student::objToStr(s1Copy) << endl;
+
+    /* Using Insertion and Extraction Operator */
+
+    cout << s1 << endl;
+
+    cin >> s1;
+    cout << s1 << endl;
 
     return 0;
 }
