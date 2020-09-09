@@ -75,7 +75,7 @@ class Student {
         return obj;
     }
 
-    static string ObjToStr(Student obj) {
+    static string objToStr(Student obj) {
         string str = "";
         str += obj.roll_Id; 
         str += ',' + obj.name;
@@ -84,7 +84,7 @@ class Student {
         return  str;
     }
 
-    static Student StrToObj(string str) {
+    static Student strToObj(string str) {
         vector<string> studentAttr = split(str, ',');
 
         string roll_Id = studentAttr[0];
@@ -96,6 +96,34 @@ class Student {
         return obj;
     }
 
+    friend ostream & operator << ( ostream &output, const Student &studentObj ) { 
+        string str = "";
+        
+        str += studentObj.roll_Id; 
+        str += ',' + studentObj.name;
+        str += ',' + studentObj.branch;
+        str += ',' + studentObj.password;
+
+        output << str; 
+
+        return output;             
+    }
+
+    friend istream & operator >> ( istream  &input, Student &studentObj ) { 
+        string str;
+
+        input >> str; 
+
+        vector<string> studentAttr = split(str, ',');
+
+        studentObj.roll_Id = studentAttr[0];
+        studentObj.name = studentAttr[1];
+        studentObj.branch = studentAttr[2];
+        studentObj.password = studentAttr[3];
+        
+        return input;            
+    }
+
 };
 
 /* Student class => End */ 
@@ -103,11 +131,11 @@ class Student {
 int main(){
     Student s1 = Student::getStudentObjFromUser();
 
-    string str = Student::ObjToStr(s1);
+    string str = Student::objToStr(s1);
     cout << str << endl;
 
-    Student s1Copy = Student::StrToObj(str);
-    cout << Student::ObjToStr(s1Copy) << endl;
+    Student s1Copy = Student::strToObj(str);
+    cout << Student::objToStr(s1Copy) << endl;
 
     return 0;
 }
