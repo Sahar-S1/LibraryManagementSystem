@@ -74,25 +74,16 @@ class Student {
         return obj;
     }
 
-    static string objToStr(Student obj) {
-        string str = "";
-        str += obj.roll_Id; 
-        str += ',' + obj.name;
-        str += ',' + obj.branch;
-        str += ',' + obj.password;
-        return  str;
-    }
+    static Student getStudentObjFromInputStream(istream &inputStream) {
+        string str;
 
-    static Student strToObj(string str) {
+        inputStream.ignore();
+        getline(inputStream, str);
+
         vector<string> studentAttr = split(str, ',');
-
-        string roll_Id = studentAttr[0];
-        string name = studentAttr[1];
-        string branch = studentAttr[2];
-        string password = studentAttr[3];
         
-        Student obj(roll_Id, name, branch, password);
-        return obj;
+        Student studentObj(studentAttr[0], studentAttr[1], studentAttr[2], studentAttr[3]);
+        return studentObj;   
     }
 
     friend ostream & operator << ( ostream &output, const Student &studentObj ) { 
@@ -106,22 +97,6 @@ class Student {
         output << str; 
 
         return output;             
-    }
-
-    friend istream & operator >> ( istream  &input, Student &studentObj ) { 
-        string str;
-
-        input.ignore();
-        getline(input, str);
-
-        vector<string> studentAttr = split(str, ',');
-
-        studentObj.roll_Id = studentAttr[0];
-        studentObj.name = studentAttr[1];
-        studentObj.branch = studentAttr[2];
-        studentObj.password = studentAttr[3];
-        
-        return input;            
     }
 
 };
@@ -180,6 +155,18 @@ class Book {
         return obj;
     }
 
+    static Book getBookObjFromInputStream(istream &inputStream) {
+        string str;
+
+        inputStream.ignore();
+        getline(inputStream, str);
+
+        vector<string> bookAttr = split(str, ',');
+        
+        Book bookObj(bookAttr[0], bookAttr[1], bookAttr[2], bookAttr[3], bookAttr[4], StringToNumber<int>(bookAttr[5]));
+        return bookObj;
+    }
+
     friend ostream & operator << ( ostream &output, const Book &bookObj ) { 
         string str = "";
         
@@ -195,37 +182,19 @@ class Book {
         return output;             
     }
 
-    friend istream & operator >> ( istream  &input, Book &bookObj ) { 
-        string str;
-
-        input.ignore();
-        getline(input, str);
-
-        vector<string> bookAttr = split(str, ',');
-
-        bookObj.isbnNumber = bookAttr[0];
-        bookObj.name = bookAttr[1];
-        bookObj.author = bookAttr[2];
-        bookObj.publisher = bookAttr[3];    
-        bookObj.genere = bookAttr[4];
-        bookObj.publisher = StringToNumber<int>(bookAttr[5]);
-        
-        return input;            
-    }
-
 };
 
 /* Book Class => End */
 
 
-int main(){
+int main() {
     Book s1 = Book::getBookObjDetailsFromUser();
 
     /* Using Insertion and Extraction Operator */
 
     cout << s1 << endl;
 
-    cin >> s1;
+    Book s2 = Book::getBookObjFromInputStream(cin);
     cout << s1 << endl;
 
     return 0;
