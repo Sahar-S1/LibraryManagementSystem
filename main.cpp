@@ -35,8 +35,7 @@ vector<string> split (const string &s, char delim) {
 /* Student class => Start */ 
 
 class Student {
-
-    public:
+    
     string roll_Id;
     string name;
     string branch;
@@ -112,7 +111,8 @@ class Student {
     friend istream & operator >> ( istream  &input, Student &studentObj ) { 
         string str;
 
-        input >> str; 
+        input.ignore();
+        getline(input, str);
 
         vector<string> studentAttr = split(str, ',');
 
@@ -128,14 +128,98 @@ class Student {
 
 /* Student class => End */ 
 
+/* Book Class => Start */
+
+class Book {
+    string isbnNumber;
+    string name;
+    string author;
+    string publisher;
+    string genere;
+    int quantity;
+
+    public:
+
+    // Book Constructor
+    Book(string isbnNumber, string name, string author, string publisher, string genere, int quantity) {
+        this -> isbnNumber = isbnNumber;
+        this -> name = name;
+        this -> author = author;
+        this -> publisher = publisher;
+        this -> genere = genere;
+        this -> quantity = quantity;
+    }
+
+    static Book getBookObjDetailsFromUser() {
+        string isbnNumber;
+        string name;
+        string author;
+        string publisher;
+        string genere;
+        int quantity;
+
+        cout << "Enter Book's ISBN Number: ";
+        getline(cin, isbnNumber);
+
+        cout << "Enter Book's name: ";
+        getline(cin, name);
+
+        cout << "Enter Book's author: ";
+        getline(cin, author);
+
+        cout << "Enter Book's publisher: ";
+        getline(cin, publisher);
+
+        cout << "Enter Book's genere: ";
+        getline(cin, genere);
+
+        cout << "Enter Book's quantity: ";
+        cin >> quantity;
+
+        Book obj(isbnNumber, name, author, publisher, genere, quantity);
+        return obj;
+    }
+
+    friend ostream & operator << ( ostream &output, const Book &bookObj ) { 
+        string str = "";
+        
+        str += bookObj.isbnNumber; 
+        str += ',' + bookObj.name;
+        str += ',' + bookObj.author;
+        str += ',' + bookObj.publisher;
+        str += ',' + bookObj.genere;
+        str += ',' + NumberToString<int>(bookObj.quantity);
+
+        output << str; 
+
+        return output;             
+    }
+
+    friend istream & operator >> ( istream  &input, Book &bookObj ) { 
+        string str;
+
+        input.ignore();
+        getline(input, str);
+
+        vector<string> bookAttr = split(str, ',');
+
+        bookObj.isbnNumber = bookAttr[0];
+        bookObj.name = bookAttr[1];
+        bookObj.author = bookAttr[2];
+        bookObj.publisher = bookAttr[3];    
+        bookObj.genere = bookAttr[4];
+        bookObj.publisher = StringToNumber<int>(bookAttr[5]);
+        
+        return input;            
+    }
+
+};
+
+/* Book Class => End */
+
+
 int main(){
-    Student s1 = Student::getStudentObjDetailsFromUser();
-
-    string str = Student::objToStr(s1);
-    cout << str << endl;
-
-    Student s1Copy = Student::strToObj(str);
-    cout << Student::objToStr(s1Copy) << endl;
+    Book s1 = Book::getBookObjDetailsFromUser();
 
     /* Using Insertion and Extraction Operator */
 
