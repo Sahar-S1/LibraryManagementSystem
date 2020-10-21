@@ -15,38 +15,31 @@ Menu
         6. Exit
 2. Admin
     Password
-        1. Add New
+        1. Issue
+        2. Return
+        3. Add New
             1. Book
-            2. Author
-            3. Publisher
-            4. Genere
-            5. Student
-        2. Manage
+            2. Student
+        4. Manage
             1. Book
-            2. Author
-            3. Publisher
-            4. Genere
-            5. Student
-        3. Issue History
-        4. Pending Books to be Returned
-        5. Manage Fines (if any)
+            2. Student
+        5. Issue History
+        6. Pending Books to be Returned
+        7. Manage Fines (if any)
             1. Fine Paid or Not
             2. FinePerDay
-        6. Reset Password
-        7. Student Details
+        8. Reset Password
+        9. Student Details
             RollID
                 1. Issue History
                 2. Pending Books to be returned
                 3. Fine Logs (if any)
-        8. Exit
+        10. Exit
 
 Classes
 => Student      - RollID, Name, Branch, Password
 => Book         - ISBN, Name, Author, Genere, Publisher, Quantity
-=> Genere       - Name
-=> Author       - Name
-=> Publisher    - Name
-=> Issue        - IssueID, Student-RollID, Book-ISBN, IssueDate, ReturnDate, FineAmount, isFinePaid
+=> Issue        - Student-RollID, Book-ISBN, IssueDate, ReturnDate, FineAmount, isFinePaid
 => FilesManager - (Static Methods)
 
 Files
