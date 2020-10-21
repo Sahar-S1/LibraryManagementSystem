@@ -8,8 +8,11 @@
 using namespace std;
 
 const string ADMIN_PASSWORD = "1234";
-const Date NULL_DATE("01-01-1800");
+const Date NULL_DATE("01-01-1950");
 const double FINE_PER_DAY = 100;
+const string studentFileName = "Student.txt";
+const string bookFileName = "Book.txt";
+const string issueFileName = "Issue.txt";
 
 template <typename T>
 T StringToNumber(const string &str) {
@@ -204,6 +207,7 @@ class Issue {
     string bookISBN;
     Date issueDate;
     Date returnDate;
+    bool isReturned;
     double fineAmount;
     bool isFinePaid;
 
@@ -214,12 +218,16 @@ class Issue {
         this->bookISBN = bookISBN;
         this->issueDate = issueDate;
         this->returnDate = NULL_DATE;
+        this->isReturned = false;
+        this->fineAmount = 0;
+        this->isFinePaid = false;
     }
 
-    void setReturnDate(Date returnDate) {
-        int dateDiff = (returnDate - issueDate);
+    void returnBook(Date returnDate) {
+        int dateDiff = returnDate - issueDate;
 
         this->returnDate = returnDate;
+        this->isReturned = true;
         this->fineAmount = (dateDiff > 7) ? (dateDiff - 7) * FINE_PER_DAY : 0;
         this->isFinePaid = (fineAmount > 0) ? false : true;
     }
@@ -232,6 +240,38 @@ class Issue {
 };
 
 /* Issue Class => End */
+
+/* FileManager Class => Start */
+
+class FileManager {
+   public:
+    static void writeStudent() {}
+    static void writeBook() {}
+    static void writeIssue() {}
+
+    static vector<Student> getAllStudents() {}
+    static vector<Book> getAllBooks() {}
+    static vector<Issue> getAllIssues() {}
+};
+
+/* FileManager Class => End */
+
+/* App Class => Start */
+
+class App {
+    vector<Student> students;
+    vector<Book> books;
+    vector<Issue> issues;
+
+   public:
+    App() {
+        this->students = FileManager::getAllStudents();
+        this->books = FileManager::getAllBooks();
+        this->issues = FileManager::getAllIssues();
+    }
+};
+
+/* App Class => End */
 
 int main() {
     // Define the format in which Date objects are input and output
