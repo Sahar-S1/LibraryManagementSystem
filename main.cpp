@@ -15,9 +15,6 @@ const string bookFileName = "Book.txt";
 const string issueFileName = "Issue.txt";
 
 const Date NULL_DATE(D01, Jan, 1950);
-const Student NULL_STUDENT("", "", "", "");
-const Book NULL_BOOK("", "", "", "", "", NULL);
-const Issue NULL_ISSUE("", "", NULL_DATE);
 
 template <typename T>
 T StringToNumber(const string &str) {
@@ -324,6 +321,36 @@ class Issue {
 
 /* Issue Class => End */
 
+/* NullChecker Class => Start */
+
+const Student NULL_STUDENT("", "", "", "");
+const Book NULL_BOOK("", "", "", "", "", 0);
+const Issue NULL_ISSUE("", "", NULL_DATE);
+
+class NullChecker {
+   public:
+    static bool isStudentNull(Student student) {
+        if (student.getName() == "" && student.getBranch() == "" && student.getRollID() == "" && student.getPassword() == "") {
+            return true;
+        }
+        return false;
+    }
+    static bool isBookNull(Book book) {
+        if (book.getISBN() == "" && book.getName() == "" && book.getAuthor() == "" && book.getPublisher() == "" && book.getGenere() == "" && book.getQuantity() == 0) {
+            return true;
+        }
+        return false;
+    }
+    static bool isIssueNull(Issue issue) {
+        if (issue.getBookISBN() == "" && issue.getStudentRollID() == "") {
+            return true;
+        }
+        return false;
+    }
+};
+
+/* NullChecker Class => End */
+
 /* FileManager Class => Start */
 
 class FileManager {
@@ -459,17 +486,6 @@ int main() {
     // Define the format in which Date objects are input and output
     DateFormat form("dd-mm-yyyy");
     Date::setFormat(form);
-
-    // Testing
-
-    Book s1 = Book::getBookObjDetailsFromUser();
-
-    cout << s1 << endl;
-
-    Book s2 = Book::getBookObjFromInputStream(cin);
-    cout << s1 << endl;
-
-    // Testing End
 
     return 0;
 }
