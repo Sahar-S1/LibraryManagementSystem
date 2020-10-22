@@ -8,11 +8,16 @@
 using namespace std;
 
 const string ADMIN_PASSWORD = "1234";
-const Date NULL_DATE(D01, Jan, 1950);
 const double FINE_PER_DAY = 100;
+
 const string studentFileName = "Student.txt";
 const string bookFileName = "Book.txt";
 const string issueFileName = "Issue.txt";
+
+const Date NULL_DATE(D01, Jan, 1950);
+const Student NULL_STUDENT("", "", "", "");
+const Book NULL_BOOK("", "", "", "", "", NULL);
+const Issue NULL_ISSUE("", "", NULL_DATE);
 
 template <typename T>
 T StringToNumber(const string &str) {
@@ -47,19 +52,6 @@ Date getDateFromUser() {
     Date date(dateInput.c_str());
     return date;
 }
-
-class Exception {
-    string message;
-
-  public:
-    Exception(string message) {
-        this->message = message;
-    }
-
-    string getExceptionMessage() {
-        return this->message;
-    }
-};
 
 /* Student class => Start */
 
@@ -127,7 +119,7 @@ class Student {
     string getPassword() {
         return this->password;
     }
-    
+
     void resetPassword(string newPassword) {
         this->password = newPassword;
     }
@@ -350,15 +342,14 @@ class FileManager {
 /* Query Class => Start */
 
 class Query {
-  public:
+   public:
     static Student getStudentByRollID(vector<Student> students, string rollID) {
-        for(int i = 0; i < students.size(); i++) {
-            if(students[i].getRollID() == rollID) {
+        for (int i = 0; i < students.size(); i++) {
+            if (students[i].getRollID() == rollID) {
                 return students[i];
             }
         }
-        // Return null
-        throw Exception("Student with roll id " + rollID + " Not Found");
+        return NULL_STUDENT;
     }
 
     static Book getBookByISBN(vector<Book> books, string isbn) {}
@@ -372,7 +363,6 @@ class Query {
     static vector<Issue> getIssuesByPendingFine(vector<Issue> issues) {}
     static vector<Issue> getIssuesByStudentRollID(vector<Issue> issues, string studentRollID) {}
     static vector<Issue> getIssuesByBookISBN(vector<Issue> issues, string bookISBN) {}
-
 };
 
 /* Query Class => End */
