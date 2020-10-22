@@ -352,17 +352,88 @@ class Query {
         return NULL_STUDENT;
     }
 
-    static Book getBookByISBN(vector<Book> books, string isbn) {}
+    static Book getBookByISBN(vector<Book> books, string isbn) {
+        for (int i = 0; i < books.size(); i++) {
+            if (books[i].getISBN() == isbn) {
+                return books[i];
+            }
+        }
+        return NULL_BOOK;
+    }
 
-    static vector<Book> getBooksByName(vector<Book> books, string name) {}
-    static vector<Book> getBooksByAuthor(vector<Book> books, string author) {}
-    static vector<Book> getBooksByPublisher(vector<Book> books, string publisher) {}
-    static vector<Book> getBooksByGenere(vector<Book> books, string genere) {}
+    static vector<Book> getBooksByName(vector<Book> books, string name) {
+        vector<Book> resultBooks;
+        for (int i = 0; i < books.size(); i++) {
+            if (books[i].getName() == name) {
+                resultBooks.push_back(books[i]);
+            }
+        }
+        return resultBooks;
+    }
+    static vector<Book> getBooksByAuthor(vector<Book> books, string author) {
+        vector<Book> resultBooks;
+        for (int i = 0; i < books.size(); i++) {
+            if (books[i].getAuthor() == author) {
+                resultBooks.push_back(books[i]);
+            }
+        }
+        return resultBooks;
+    }
+    static vector<Book> getBooksByPublisher(vector<Book> books, string publisher) {
+        vector<Book> resultBooks;
+        for (int i = 0; i < books.size(); i++) {
+            if (books[i].getPublisher() == publisher) {
+                resultBooks.push_back(books[i]);
+            }
+        }
+        return resultBooks;
+    }
+    static vector<Book> getBooksByGenere(vector<Book> books, string genere) {
+        vector<Book> resultBooks;
+        for (int i = 0; i < books.size(); i++) {
+            if (books[i].getGenere() == genere) {
+                resultBooks.push_back(books[i]);
+            }
+        }
+        return resultBooks;
+    }
 
-    static vector<Issue> getIssuesByPendingReturn(vector<Issue> issues) {}
-    static vector<Issue> getIssuesByPendingFine(vector<Issue> issues) {}
-    static vector<Issue> getIssuesByStudentRollID(vector<Issue> issues, string studentRollID) {}
-    static vector<Issue> getIssuesByBookISBN(vector<Issue> issues, string bookISBN) {}
+    static vector<Issue> getIssuesByPendingReturn(vector<Issue> issues) {
+        vector<Issue> resultIssues;
+        for (int i = 0; i < issues.size(); i++) {
+            if (issues[i].getIsReturned() == false) {
+                resultIssues.push_back(issues[i]);
+            }
+        }
+        return resultIssues;
+    }
+    static vector<Issue> getIssuesByPendingFine(vector<Issue> issues) {
+        vector<Issue> resultIssues;
+        for (int i = 0; i < issues.size(); i++) {
+            if (issues[i].getIsFinePaid() == false) {
+                resultIssues.push_back(issues[i]);
+            }
+        }
+        return resultIssues;
+    }
+    static vector<Issue> getIssuesByStudentRollID(vector<Issue> issues, string studentRollID) {
+        vector<Issue> resultIssues;
+        for (int i = 0; i < issues.size(); i++) {
+            if (issues[i].getStudentRollID() == studentRollID) {
+                resultIssues.push_back(issues[i]);
+            }
+        }
+        return resultIssues;
+    }
+    static vector<Issue> getIssuesByBookISBN(vector<Issue> issues, string bookISBN) {
+        vector<Issue> resultIssues;
+        for (int i = 0; i < issues.size(); i++) {
+            if (issues[i].getBookISBN() == bookISBN) {
+                resultIssues.push_back(issues[i]);
+            }
+        }
+        return resultIssues;
+    }
 };
 
 /* Query Class => End */
