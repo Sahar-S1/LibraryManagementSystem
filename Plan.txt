@@ -4,10 +4,11 @@ Menu
     Password
         1. Search Book
             1. All
-            2. By Author
-            3. By Publisher
-            4. By Genere
-            5. By Name
+            2. ISBN Number
+            3. By Author
+            4. By Publisher
+            5. By Genere
+            6. By Name
         2. Issue History
         3. Pending Books to be returned
         4. Fine Logs (if any)

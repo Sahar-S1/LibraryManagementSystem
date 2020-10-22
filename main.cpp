@@ -8,7 +8,7 @@
 using namespace std;
 
 const string ADMIN_PASSWORD = "1234";
-const Date NULL_DATE("01-01-1950");
+const Date NULL_DATE(D01, Jan, 1950);
 const double FINE_PER_DAY = 100;
 const string studentFileName = "Student.txt";
 const string bookFileName = "Book.txt";
@@ -99,6 +99,10 @@ class Student {
         return studentObj;
     }
 
+    string getPassword() {
+        return this->password;
+    }
+    
     void resetPassword(string password) {
         this->password = password;
     }
@@ -245,9 +249,9 @@ class Issue {
 
 class FileManager {
    public:
-    static void writeStudent() {}
-    static void writeBook() {}
-    static void writeIssue() {}
+    static void writeStudents(vector<Student> students) {}
+    static void writeBooks(vector<Book> books) {}
+    static void writeIssues(vector<Issue> issues) {}
 
     static vector<Student> getAllStudents() {}
     static vector<Book> getAllBooks() {}
@@ -255,6 +259,28 @@ class FileManager {
 };
 
 /* FileManager Class => End */
+
+/* Query Class => Start */
+
+class Query {
+  public:
+    static Student getStudentByRollID(vector<Student> students, string rollID) {}
+
+    static Book getBookByISBN(vector<Book> books, string isbn) {}
+
+    static vector<Book> getBooksByName(vector<Book> books, string name) {}
+    static vector<Book> getBooksByAuthor(vector<Book> books, string author) {}
+    static vector<Book> getBooksByPublisher(vector<Book> books, string publisher) {}
+    static vector<Book> getBooksByGenere(vector<Book> books, string genere) {}
+
+    static vector<Issue> getIssuesByPendingReturn(vector<Issue> issues) {}
+    static vector<Issue> getIssuesByPendingFine(vector<Issue> issues) {}
+    static vector<Issue> getIssuesByStudentRollID(vector<Issue> issues, string studentRollID) {}
+    static vector<Issue> getIssuesByBookISBN(vector<Issue> issues, string bookISBN) {}
+
+};
+
+/* Query Class => End */
 
 /* App Class => Start */
 
