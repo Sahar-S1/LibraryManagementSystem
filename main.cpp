@@ -48,6 +48,19 @@ Date getDateFromUser() {
     return date;
 }
 
+class Exception {
+    string message;
+
+  public:
+    Exception(string message) {
+        this->message = message;
+    }
+
+    string getExceptionMessage() {
+        return this->message;
+    }
+};
+
 /* Student class => Start */
 
 class Student {
@@ -99,12 +112,24 @@ class Student {
         return studentObj;
     }
 
+    string getRollID() {
+        return this->roll_Id;
+    }
+
+    string getName() {
+        return this->name;
+    }
+
+    string getBranch() {
+        return this->branch;
+    }
+
     string getPassword() {
         return this->password;
     }
     
-    void resetPassword(string password) {
-        this->password = password;
+    void resetPassword(string newPassword) {
+        this->password = newPassword;
     }
 
     friend ostream &operator<<(ostream &output, const Student &studentObj) {
@@ -174,6 +199,30 @@ class Book {
         return obj;
     }
 
+    string getISBN() {
+        return this->isbnNumber;
+    }
+
+    string getName() {
+        return this->name;
+    }
+
+    string getAuthor() {
+        return this->author;
+    }
+
+    string getPublisher() {
+        return this->author;
+    }
+
+    string getGenere() {
+        return this->genere;
+    }
+
+    int getQuantity() {
+        return this->quantity;
+    }
+
     static Book getBookObjFromInputStream(istream &inputStream) {
         string str;
 
@@ -221,10 +270,48 @@ class Issue {
         this->studentRollID = studentRollID;
         this->bookISBN = bookISBN;
         this->issueDate = issueDate;
+
         this->returnDate = NULL_DATE;
         this->isReturned = false;
         this->fineAmount = 0;
-        this->isFinePaid = false;
+        this->isFinePaid = true;
+    }
+    Issue(string studentRollID, string bookISBN, Date issueDate, Date returnDate, bool isReturned, double fineAmount, bool isFinePaid) {
+        this->studentRollID = studentRollID;
+        this->bookISBN = bookISBN;
+        this->issueDate = issueDate;
+        this->returnDate = returnDate;
+        this->isReturned = isReturned;
+        this->fineAmount = fineAmount;
+        this->isFinePaid = isFinePaid;
+    }
+
+    string getStudentRollID() {
+        return this->studentRollID;
+    }
+
+    string getBookISBN() {
+        return this->bookISBN;
+    }
+
+    Date getIssueDate() {
+        return this->issueDate;
+    }
+
+    Date getReturnDate() {
+        return this->returnDate;
+    }
+
+    bool getIsReturned() {
+        return this->isReturned;
+    }
+
+    double getFineAmount() {
+        return this->fineAmount;
+    }
+
+    bool getIsFinePaid() {
+        return this->isFinePaid;
     }
 
     void returnBook(Date returnDate) {
@@ -264,7 +351,15 @@ class FileManager {
 
 class Query {
   public:
-    static Student getStudentByRollID(vector<Student> students, string rollID) {}
+    static Student getStudentByRollID(vector<Student> students, string rollID) {
+        for(int i = 0; i < students.size(); i++) {
+            if(students[i].getRollID() == rollID) {
+                return students[i];
+            }
+        }
+        // Return null
+        throw Exception("Student with roll id " + rollID + " Not Found");
+    }
 
     static Book getBookByISBN(vector<Book> books, string isbn) {}
 
