@@ -602,8 +602,8 @@ Date::Date(const char* date) throw(invalid_argument, domain_error, out_of_range)
     // If the input doesn't match the static member format, raise an invalid argument exception
     if (!(strcmp(dayFormat, Date::getDateFormat()) == 0 && strcmp(monthFormat, Date::getMonthFormat()) == 0 && strcmp(yearFormat, Date::getYearFormat()) == 0)) {
         throw invalid_argument("Exception Raised. Format doesn't match the static member format.");
-        cout << "Entered Format : " << dayFormat << " " << monthFormat << " " << yearFormat << endl;
-        cout << "Expected Format : " << Date::getDateFormat() << " " << Date::getMonthFormat() << " " << Date::getYearFormat() << endl;
+        cout << "Entered Format : " << dayFormat << "-" << monthFormat << "-" << yearFormat << endl;
+        cout << "Expected Format : " << Date::getDateFormat() << "-" << Date::getMonthFormat() << "-" << Date::getYearFormat() << endl;
     }
     // If exception not thrown till now, we have valid date format
     // Converting to enums.
@@ -835,30 +835,30 @@ ostream& operator<<(ostream& os, const Date& date) {
     // Flush to os according to the static member format
     if (date.getDateFormat() != NULL) {
         if (strcmp(date.getDateFormat(), "d") == 0) {
-            os << day << " ";
+            os << day << "-";
         } else if (strcmp(date.getDateFormat(), "dd") == 0) {
             if (day < 10)
-                os << "0" << day << " ";
+                os << "0" << day << "-";
             else
-                os << day << " ";
+                os << day << "-";
         }
     }
 
     if (date.getMonthFormat() != NULL) {
         if (strcmp(date.getMonthFormat(), "m") == 0) {
-            os << month << " ";
+            os << month << "-";
         } else if (strcmp(date.getMonthFormat(), "mm") == 0) {
             if (month < 10)
-                os << "0" << month << " ";
+                os << "0" << month << "-";
             else
-                os << month << " ";
+                os << month << "-";
         } else if (strcmp(date.getMonthFormat(), "mmm") == 0) {
             string monthShortName[] = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
-            os << monthShortName[month - 1] << " ";
+            os << monthShortName[month - 1] << "-";
         }
     } else {
         string monthFullName[] = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
-        os << monthFullName[month - 1] << " ";
+        os << monthFullName[month - 1] << "-";
     }
 
     if (date.getYearFormat() != NULL) {
