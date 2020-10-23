@@ -58,6 +58,19 @@ string date2string(const Date &date) {
     return ss.str();
 }
 
+void clearConsole() {
+    cout.flush();  // Flush the output stream
+#if defined _WIN32
+    system("cls");
+#elif defined(__LINUX__) || defined(__gnu_linux__) || defined(__linux__)
+    system("clear");
+#elif defined(__APPLE__)
+    system("clear");
+#endif
+    // CSI[2J clears screen, CSI[H moves the cursor to top-left corner
+    // cout << "\x1B[2J\x1B[H";
+}
+
 /* Student class => Start */
 
 class Student {
