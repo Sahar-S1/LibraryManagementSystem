@@ -1,5 +1,5 @@
-#include <iostream>
 #include <fstream>
+#include <iostream>
 #include <sstream>
 #include <string>
 #include <vector>
@@ -11,6 +11,7 @@ using namespace std;
 const string ADMIN_PASSWORD = "1234";
 const double FINE_PER_DAY = 100;
 
+DateFormat DATE_FORMAT("dd-mm-yyyy");
 const Date NULL_DATE(D01, Jan, 1950);
 
 template <typename T>
@@ -45,6 +46,16 @@ Date getDateFromUser() {
     cin >> dateInput;
     Date date(dateInput.c_str());
     return date;
+}
+
+bool string2bool(const string &v) {
+    return !v.empty() && (atoi(v.c_str()) != 0);
+}
+
+string date2string(const Date &date) {
+    ostringstream ss;
+    ss << date;
+    return ss.str();
 }
 
 /* Student class => Start */
@@ -317,15 +328,55 @@ class Issue {
         this->isFinePaid = (fineAmount > 0) ? false : true;
     }
 
-    static Issue getIssueObjDetailsFromUser() {}
+    static Issue getIssueObjDetailsFromUser() {
+        string studentRollID;
+        string bookISBN;
+        Date issueDate;
 
-    static Issue getIssueObjFromInputStream(istream &inputStream) {}
+        cout << "Enter Student's Roll ID: ";
+        getline(cin, studentRollID);
+
+        cout << "Enter Book's ISBN Number: ";
+        getline(cin, bookISBN);
+
+        cout << "Enter Issue Date in format dd-mm-yyyy: ";
+        issueDate = getDateFromUser();
+
+        Issue obj(studentRollID, bookISBN, issueDate);
+        return obj;
+    }
+
+    static Issue getIssueObjFromInputStream(istream &inputStream) {
+        string str;
+
+        inputStream.ignore();
+        getline(inputStream, str);
+
+        vector<string> issueAttr = split(str, ',');
+
+        Issue issue(issueAttr[0], issueAttr[1], Date(issueAttr[2].c_str()), Date(issueAttr[3].c_str()), string2bool(issueAttr[4]), StringToNumber<double>(issueAttr[5]), string2bool(issueAttr[6]));
+        return issue;
+    }
 
     friend bool operator==(const Issue &issue1, const Issue &issue2) {
         return issue1.bookISBN == issue2.bookISBN && issue1.studentRollID == issue2.studentRollID && (Date)issue1.issueDate == (Date)issue2.issueDate && (Date)issue1.returnDate == (Date)issue2.returnDate && issue1.isReturned == issue2.isReturned && issue1.isFinePaid == issue2.isFinePaid && issue1.fineAmount == issue2.fineAmount;
     }
 
-    friend ostream &operator<<(ostream &output, const Issue &issueObj) {}
+    friend ostream &operator<<(ostream &output, const Issue &issueObj) {
+        string str = "";
+
+        str += issueObj.studentRollID;
+        str += ',' + issueObj.bookISBN;
+        str += ',' + date2string(issueObj.issueDate);
+        str += ',' + date2string(issueObj.returnDate);
+        str += ',' + issueObj.isReturned;
+        str += ',' + NumberToString<double>(issueObj.fineAmount);
+        str += ',' + issueObj.isFinePaid;
+
+        output << str;
+
+        return output;
+    }
 };
 
 /* Issue Class => End */
@@ -333,7 +384,7 @@ class Issue {
 /* NullChecker Class => Start */
 
 class NullChecker {
-  public:
+   public:
     static const Student NULL_STUDENT;
     static const Book NULL_BOOK;
     static const Issue NULL_ISSUE;
@@ -352,7 +403,6 @@ class NullChecker {
 const Student NullChecker::NULL_STUDENT = Student("", "", "", "");
 const Book NullChecker::NULL_BOOK = Book("", "", "", "", "", 0);
 const Issue NullChecker::NULL_ISSUE = Issue("", "", NULL_DATE);
-
 
 /* NullChecker Class => End */
 
@@ -406,7 +456,7 @@ class FileManager {
         string _;
         getline(fin, _);
 
-        while(!fin.eof()) {
+        while (!fin.eof()) {
             students.push_back(Student::getStudentObjFromInputStream(fin));
         }
 
@@ -420,7 +470,7 @@ class FileManager {
         string _;
         getline(fin, _);
 
-        while(!fin.eof()) {
+        while (!fin.eof()) {
             books.push_back(Book::getBookObjFromInputStream(fin));
         }
 
@@ -434,7 +484,7 @@ class FileManager {
         string _;
         getline(fin, _);
 
-        while(!fin.eof()) {
+        while (!fin.eof()) {
             issues.push_back(Issue::getIssueObjFromInputStream(fin));
         }
 
@@ -550,7 +600,7 @@ class Query {
 /* State Class => Start */
 
 class State {
-  protected:
+   protected:
     vector<Student> students;
     vector<Book> books;
     vector<Issue> issues;
@@ -561,7 +611,6 @@ class State {
 /* App Class => Start */
 
 class App : protected State {
-
    public:
     App() {
         this->State::students = FileManager::getAllStudents();
@@ -582,8 +631,7 @@ class App : protected State {
 
 int main() {
     // Define the format in which Date objects are input and output
-    DateFormat form("dd-mm-yyyy");
-    Date::setFormat(form);
+    Date::setFormat(DATE_FORMAT);
 
     // App app;
     // app.start();
