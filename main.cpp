@@ -121,6 +121,10 @@ class Student {
         this->password = newPassword;
     }
 
+    friend bool operator==(const Student &student1, const Student &student2) {
+        return student1.roll_Id == student2.roll_Id && student1.name == student2.name && student1.branch == student2.branch && student1.password == student2.password;
+    }
+
     friend ostream &operator<<(ostream &output, const Student &studentObj) {
         string str = "";
 
@@ -224,6 +228,10 @@ class Book {
         return bookObj;
     }
 
+    friend bool operator==(const Book &book1, const Book &book2) {
+        return book1.isbnNumber == book2.isbnNumber && book1.name == book2.name && book1.author == book2.author && book1.publisher == book2.publisher && book1.genere == book2.genere && book1.quantity == book2.quantity;
+    }
+
     friend ostream &operator<<(ostream &output, const Book &bookObj) {
         string str = "";
 
@@ -316,6 +324,10 @@ class Issue {
 
     static Issue getIssueObjFromInputStream(istream &inputStream) {}
 
+    friend bool operator==(const Issue &issue1, const Issue &issue2) {
+        return issue1.bookISBN == issue2.bookISBN && issue1.studentRollID == issue2.studentRollID && (Date)issue1.issueDate == (Date)issue2.issueDate && (Date)issue1.returnDate == (Date)issue2.returnDate && issue1.isReturned == issue2.isReturned && issue1.isFinePaid == issue2.isFinePaid && issue1.fineAmount == issue2.fineAmount;
+    }
+
     friend ostream &operator<<(ostream &output, const Issue &issueObj) {}
 };
 
@@ -323,31 +335,27 @@ class Issue {
 
 /* NullChecker Class => Start */
 
-const Student NULL_STUDENT("", "", "", "");
-const Book NULL_BOOK("", "", "", "", "", 0);
-const Issue NULL_ISSUE("", "", NULL_DATE);
-
 class NullChecker {
-   public:
+  public:
+    static const Student NULL_STUDENT;
+    static const Book NULL_BOOK;
+    static const Issue NULL_ISSUE;
+
     static bool isStudentNull(Student student) {
-        if (student.getName() == "" && student.getBranch() == "" && student.getRollID() == "" && student.getPassword() == "") {
-            return true;
-        }
-        return false;
+        return student == NULL_STUDENT;
     }
     static bool isBookNull(Book book) {
-        if (book.getISBN() == "" && book.getName() == "" && book.getAuthor() == "" && book.getPublisher() == "" && book.getGenere() == "" && book.getQuantity() == 0) {
-            return true;
-        }
-        return false;
+        return book == NULL_BOOK;
     }
     static bool isIssueNull(Issue issue) {
-        if (issue.getBookISBN() == "" && issue.getStudentRollID() == "") {
-            return true;
-        }
-        return false;
+        return issue == NULL_ISSUE;
     }
 };
+
+const Student NullChecker::NULL_STUDENT = Student("", "", "", "");
+const Book NullChecker::NULL_BOOK = Book("", "", "", "", "", 0);
+const Issue NullChecker::NULL_ISSUE = Issue("", "", NULL_DATE);
+
 
 /* NullChecker Class => End */
 
@@ -376,7 +384,7 @@ class Query {
                 return students[i];
             }
         }
-        return NULL_STUDENT;
+        return NullChecker::NULL_STUDENT;
     }
 
     static Book getBookByISBN(vector<Book> books, string isbn) {
@@ -385,7 +393,7 @@ class Query {
                 return books[i];
             }
         }
-        return NULL_BOOK;
+        return NullChecker::NULL_BOOK;
     }
 
     static vector<Book> getBooksByName(vector<Book> books, string name) {
