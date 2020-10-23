@@ -442,9 +442,9 @@ class FileManager {
     }
 };
 
-const string FileManager::studentFileName = "Students.csv";
-const string FileManager::bookFileName = "Books.csv";
-const string FileManager::issueFileName = "Issues.csv";
+const string FileManager::studentFileName = "data/Students.csv";
+const string FileManager::bookFileName = "data/Books.csv";
+const string FileManager::issueFileName = "data/Issues.csv";
 
 /* FileManager Class => End */
 
