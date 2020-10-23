@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 #include <sstream>
 #include <string>
 #include <vector>
@@ -9,10 +10,6 @@ using namespace std;
 
 const string ADMIN_PASSWORD = "1234";
 const double FINE_PER_DAY = 100;
-
-const string studentFileName = "Student.txt";
-const string bookFileName = "Book.txt";
-const string issueFileName = "Issue.txt";
 
 const Date NULL_DATE(D01, Jan, 1950);
 
@@ -362,15 +359,92 @@ const Issue NullChecker::NULL_ISSUE = Issue("", "", NULL_DATE);
 /* FileManager Class => Start */
 
 class FileManager {
-   public:
-    static void writeStudents(vector<Student> students) {}
-    static void writeBooks(vector<Book> books) {}
-    static void writeIssues(vector<Issue> issues) {}
+    static const string studentFileName;
+    static const string bookFileName;
+    static const string issueFileName;
 
-    static vector<Student> getAllStudents() {}
-    static vector<Book> getAllBooks() {}
-    static vector<Issue> getAllIssues() {}
+   public:
+    static void writeStudents(vector<Student> students) {
+        ofstream fout(FileManager::studentFileName.c_str(), ios::out);
+
+        fout << "RollID,Name,Branch,Password" << endl;
+
+        for (int i = 0; i < students.size(); i++) {
+            fout << students[i] << endl;
+        }
+
+        fout.close();
+    }
+    static void writeBooks(vector<Book> books) {
+        ofstream fout(FileManager::bookFileName.c_str(), ios::out);
+
+        fout << "ISBN,Name,Author,Publisher,Genere,Quantity" << endl;
+
+        for (int i = 0; i < books.size(); i++) {
+            fout << books[i] << endl;
+        }
+
+        fout.close();
+    }
+    static void writeIssues(vector<Issue> issues) {
+        ofstream fout(FileManager::issueFileName.c_str(), ios::out);
+
+        fout << "BookISBN,StudentRollID,IssueDate,ReturnDate,IsReturned,FineAmount,IsFinePaid" << endl;
+
+        for (int i = 0; i < issues.size(); i++) {
+            fout << issues[i] << endl;
+        }
+
+        fout.close();
+    }
+
+    static vector<Student> getAllStudents() {
+        vector<Student> students;
+
+        ifstream fin(FileManager::studentFileName.c_str(), ios::in);
+
+        string _;
+        getline(fin, _);
+
+        while(!fin.eof()) {
+            students.push_back(Student::getStudentObjFromInputStream(fin));
+        }
+
+        return students;
+    }
+    static vector<Book> getAllBooks() {
+        vector<Book> books;
+
+        ifstream fin(FileManager::bookFileName.c_str(), ios::in);
+
+        string _;
+        getline(fin, _);
+
+        while(!fin.eof()) {
+            books.push_back(Book::getBookObjFromInputStream(fin));
+        }
+
+        return books;
+    }
+    static vector<Issue> getAllIssues() {
+        vector<Issue> issues;
+
+        ifstream fin(FileManager::issueFileName.c_str(), ios::in);
+
+        string _;
+        getline(fin, _);
+
+        while(!fin.eof()) {
+            issues.push_back(Issue::getIssueObjFromInputStream(fin));
+        }
+
+        return issues;
+    }
 };
+
+const string FileManager::studentFileName = "Students.csv";
+const string FileManager::bookFileName = "Books.csv";
+const string FileManager::issueFileName = "Issues.csv";
 
 /* FileManager Class => End */
 
