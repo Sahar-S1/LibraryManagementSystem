@@ -600,10 +600,23 @@ class Query {
 /* State Class => Start */
 
 class State {
-   protected:
+   private:
     vector<Student> students;
     vector<Book> books;
     vector<Issue> issues;
+
+   protected:
+    void readStateFromFiles() {
+        this->students = FileManager::getAllStudents();
+        this->books = FileManager::getAllBooks();
+        this->issues = FileManager::getAllIssues();
+    }
+
+    void writeStateInFiles() {
+        FileManager::writeStudents(this->students);
+        FileManager::writeBooks(this->books);
+        FileManager::writeIssues(this->issues);
+    }
 };
 
 /* State Class => End */
@@ -613,15 +626,11 @@ class State {
 class App : protected State {
    public:
     App() {
-        this->State::students = FileManager::getAllStudents();
-        this->State::books = FileManager::getAllBooks();
-        this->State::issues = FileManager::getAllIssues();
+        State::readStateFromFiles();
     }
 
     ~App() {
-        FileManager::writeStudents(this->State::students);
-        FileManager::writeBooks(this->State::books);
-        FileManager::writeIssues(this->State::issues);
+        State::writeStateInFiles();
     }
 
     void start() {}
