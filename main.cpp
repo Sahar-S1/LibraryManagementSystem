@@ -486,6 +486,12 @@ class App {
         this->books = FileManager::getAllBooks();
         this->issues = FileManager::getAllIssues();
     }
+
+    ~App() {
+        // Write all three vectors
+    }
+
+    void start() {}
 };
 
 /* App Class => End */
@@ -494,6 +500,9 @@ int main() {
     // Define the format in which Date objects are input and output
     DateFormat form("dd-mm-yyyy");
     Date::setFormat(form);
+
+    // App app;
+    // app.start();
 
     return 0;
 }
