@@ -473,22 +473,32 @@ class Query {
 
 /* Query Class => End */
 
-/* App Class => Start */
+/* State Class => Start */
 
-class App {
+class State {
+  protected:
     vector<Student> students;
     vector<Book> books;
     vector<Issue> issues;
+};
+
+/* State Class => End */
+
+/* App Class => Start */
+
+class App : protected State {
 
    public:
     App() {
-        this->students = FileManager::getAllStudents();
-        this->books = FileManager::getAllBooks();
-        this->issues = FileManager::getAllIssues();
+        this->State::students = FileManager::getAllStudents();
+        this->State::books = FileManager::getAllBooks();
+        this->State::issues = FileManager::getAllIssues();
     }
 
     ~App() {
-        // Write all three vectors
+        FileManager::writeStudents(this->State::students);
+        FileManager::writeBooks(this->State::books);
+        FileManager::writeIssues(this->State::issues);
     }
 
     void start() {}
