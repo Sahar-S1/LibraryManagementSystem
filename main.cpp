@@ -466,6 +466,10 @@ class FileManager {
 
         ifstream fin(FileManager::studentFileName.c_str(), ios::in);
 
+        if(fin.fail()) {
+            return students;
+        }
+
         string _;
         getline(fin, _);
 
@@ -480,6 +484,10 @@ class FileManager {
 
         ifstream fin(FileManager::bookFileName.c_str(), ios::in);
 
+        if(fin.fail()) {
+            return books;
+        }
+
         string _;
         getline(fin, _);
 
@@ -493,6 +501,10 @@ class FileManager {
         vector<Issue> issues;
 
         ifstream fin(FileManager::issueFileName.c_str(), ios::in);
+
+        if(fin.fail()) {
+            return issues;
+        }
 
         string _;
         getline(fin, _);
@@ -630,6 +642,14 @@ class State {
         FileManager::writeBooks(this->books);
         FileManager::writeIssues(this->issues);
     }
+
+    bool validateAdmin(string password) {
+        return true;
+    }
+
+    bool validateStudent(string rollID, string password) {
+        return true;
+    }
 };
 
 /* State Class => End */
@@ -637,6 +657,63 @@ class State {
 /* App Class => Start */
 
 class App : protected State {
+    void showMenu() {
+        int userInput;
+
+        string password;
+        string rollId;
+
+        do {
+            cout << "1.Student \n2.Admin \n3.Exit" << endl;
+            cout << "Login As: ";
+            cin >> userInput;
+
+            clearConsole();
+        
+            switch (userInput) {
+                case 1:
+                    cout << "Enter Roll ID: ";
+                    cin >> rollId;
+                    cout << "Enter Password: ";
+                    cin >> password;
+
+                    if (State::validateStudent(rollId, password))
+                        this->showStudentMenu();
+                    else
+                        cout << "Authentication Failed" << endl;
+                
+                    break;
+
+                case 2: ;
+                    cout << "Enter Password: ";
+                    cin >> password;
+
+                    if (State::validateAdmin(password))
+                        this->showAdminMenu();
+                    else
+                        cout << "Authentication Failed" << endl;
+
+                    break;
+
+                case 3:
+                    this->stop();
+                    break;
+
+                default:
+                    cout << "Enter a valid choice" << endl;
+                    break;
+            }
+        } while(userInput != 1 && userInput != 2 && userInput != 3);
+    }
+
+    void showStudentMenu() {
+        clearConsole();
+    }
+    
+    void showAdminMenu() {
+        clearConsole();
+    }
+
    public:
     App() {
         State::readStateFromFiles();
@@ -648,9 +725,11 @@ class App : protected State {
 
     void start() {
         // Menu
-        cout << "Hi there";
-        clearConsole();
-        cout << "Cleared the console";
+        this->showMenu();                           
+    }
+
+    void stop() {
+        delete this;
     }
 };
 
