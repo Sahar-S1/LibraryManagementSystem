@@ -1,6 +1,2 @@
 .vscode
 *.exe
-
-data/Students.csv
-data/Books.csv
-data/Issues.csv
