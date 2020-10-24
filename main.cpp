@@ -708,10 +708,272 @@ class App : protected State {
 
     void showStudentMenu() {
         clearConsole();
+        int userInput;
+    
+        do{
+            cout << "1.Search \n2.Issue history \n3.Pending Books to be returned \n4.Fine Log \n5.Reset Password \n6.Exit" << endl ;
+            cout << "Enter your choice: ";
+            cin >> userInput;
+
+            switch(userInput) {
+                case 1:
+                    this->showSearchBookMenu();
+                    break;
+                
+                case 2:
+                    // Issue history
+                    break;
+
+                case 3:
+                    // Pending books to be returned
+                    break;
+
+                case 4:
+                    // Fine log
+                    break;
+
+                case 5:
+                    // Restet password
+                    break;
+
+                case 6:
+                    this->stop();
+                    break;
+
+                default:
+                    cout << "Enter a valid choice" << endl;
+                    break;
+            }
+        } while(userInput != 6);
     }
     
     void showAdminMenu() {
         clearConsole();
+        int userInput;
+        string rollID;
+    
+        do {
+            cout << "1.Issue \n2.Return \n3.Add New \n4.Manage \n5.Issue History \n6.Pending Books to be returned \n7.Manage Fines \n8.Reset Password \n9.Student Details \n10.Exit" << endl ;
+            cout << "Enter your choice: ";
+            cin >> userInput;
+
+            switch(userInput)
+            {
+                case 1:
+                    // Issue
+                    break;
+                
+                case 2:
+                    // Return
+                    break;
+
+                case 3:
+                    this->showAddNewMenu();
+                    break;
+
+                case 4:
+                    this->showManageMenu();
+                    break;
+
+                case 5:
+                    // Issue History
+                    break;
+
+                case 6:
+                    // Pending Books to be returned
+                    break;
+
+                case 7:
+                    this->showManageFinesMenu();
+                    break;
+
+                case 8:
+                    // Reset Password 
+                    break;
+
+                case 9:
+                    cout << "\nEnter Roll ID: ";
+                    cin >> rollID;
+
+                    this->showStudentDetailsMenu(rollID);
+                    break;
+
+                case 10:
+                    this->stop();
+                    break;
+
+                default:
+                    cout << "Enter a valid choice" << endl;
+                    break;
+            }
+        } while(userInput != 10);
+    }
+
+    void showSearchBookMenu() {
+        clearConsole();
+        int userInput;
+
+        do{
+            cout << "1.By Author \n2.By Publisher \n3.By Genre \n4.By Name \n5.All \n6.Exit" << endl;
+            cout << "Enter your choice: ";
+            cin >> userInput;
+
+            switch (userInput) {
+                case 1:
+                    // By Author
+                break;
+
+                case 2:
+                    // By Publisher
+                break;
+
+                case 3:
+                    // By Genre
+                break;
+
+                case 4:
+                    // By Name
+                break;
+
+                case 5:
+                    // All
+                break;
+
+                case 6:
+                    clearConsole();
+                    return;
+                    break;
+
+                default:
+                    cout << "\nEnter a valid choice";
+                    break;
+            }
+        } while(userInput != 6);
+    }
+
+    void showAddNewMenu() {
+        clearConsole();
+        int userInput;
+
+        do{
+            cout << "1.Book \n2.Student \n3.Exit" << endl;
+            cout << "Enter your choice: ";
+            cin >> userInput;
+
+            switch (userInput) {
+                case 1:
+                    // Book
+                    break;
+
+                case 2:
+                    // Student
+                    break;
+
+                case 3:
+                    clearConsole();
+                    return;
+                    break;
+
+                default:
+                    cout << "\nEnter a valid choice";
+                    break;
+            }
+        } while(userInput != 3);
+    }
+
+    void showManageMenu() {
+        clearConsole();
+        int userInput;
+
+        do{
+            cout << "1.Book \n2.Student \n3.Exit" << endl;
+            cout << "Enter your choice: ";
+            cin >> userInput;
+
+            switch (userInput) {
+                case 1:
+                    // Book
+                    break;
+
+                case 2:
+                    // Student
+                    break;
+
+                case 3:
+                    clearConsole();
+                    return;
+                    break;
+
+                default:
+                    cout << "\nEnter a valid choice";
+                    break;
+            }
+        } while(userInput != 3);
+    }
+
+    void showManageFinesMenu() {
+        clearConsole();
+        int userInput;
+
+        do{
+            cout << "1.Fines paid or not \n2.Fine per day \n3.Exit" << endl;
+            cout << "Enter your choice: ";
+            cin >> userInput;
+
+            switch (userInput)
+            {
+                case 1:
+                    // Fines paid or not
+                    break;
+
+                case 2:
+                    // Fines per day
+                    break;
+
+                case 3:
+                    clearConsole();
+                    return;
+                    break;
+
+                default:
+                    cout << "\nEnter a valid choice";
+                    break;
+            }
+        } while(userInput != 3);
+    }
+
+    void showStudentDetailsMenu(string rollID) {
+        clearConsole();
+        int userInput;
+        
+        do {
+            cout << "1.Issue history \n2.Pending books to be returned \n3.Fine logs \n4.Exit" << endl;
+            cout << "Enter your choice: ";
+            cin >> userInput;
+
+            switch (userInput) {
+                case 1:
+                    // Issue history
+                    break;
+
+                case 2:
+                    // Pending books to be returned
+                    break;
+
+                case 3:
+                    // Pending books to be returned
+                    break;
+                
+                case 4:
+                    clearConsole();
+                    return;
+                    break;
+
+                default:
+                    cout << "\nEnter a valid choice";
+                    break;
+            }
+        }while(userInput != 4);
     }
 
    public:
@@ -740,7 +1002,10 @@ int main() {
     Date::setFormat(DATE_FORMAT);
 
     App app;
+
     app.start();
+    
+    app.stop();
 
     return 0;
 }
