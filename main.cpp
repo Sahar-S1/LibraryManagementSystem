@@ -638,15 +638,20 @@ class State {
 
 class App : protected State {
    public:
-    App() {
-        State::readStateFromFiles();
-    }
+    // App() {
+    //     State::readStateFromFiles();
+    // }
 
     ~App() {
         State::writeStateInFiles();
     }
 
-    void start() {}
+    void start() {
+        // Menu
+        cout << "Hi there";
+        clearConsole();
+        cout << "Cleared the console";
+    }
 };
 
 /* App Class => End */
@@ -655,8 +660,8 @@ int main() {
     // Define the format in which Date objects are input and output
     Date::setFormat(DATE_FORMAT);
 
-    // App app;
-    // app.start();
+    App app;
+    app.start();
 
     return 0;
 }
