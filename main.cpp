@@ -430,10 +430,10 @@ class FileManager {
     static void writeStudents(vector<Student> students) {
         ofstream fout(FileManager::studentFileName.c_str(), ios::out);
 
-        fout << "RollID,Name,Branch,Password" << endl;
+        fout << "RollID,Name,Branch,Password";
 
         for (int i = 0; i < students.size(); i++) {
-            fout << students[i] << endl;
+            fout << endl << students[i];
         }
 
         fout.close();
@@ -441,10 +441,10 @@ class FileManager {
     static void writeBooks(vector<Book> books) {
         ofstream fout(FileManager::bookFileName.c_str(), ios::out);
 
-        fout << "ISBN,Name,Author,Publisher,Genere,Quantity" << endl;
+        fout << "ISBN,Name,Author,Publisher,Genere,Quantity";
 
         for (int i = 0; i < books.size(); i++) {
-            fout << books[i] << endl;
+            fout << endl << books[i];
         }
 
         fout.close();
@@ -452,10 +452,10 @@ class FileManager {
     static void writeIssues(vector<Issue> issues) {
         ofstream fout(FileManager::issueFileName.c_str(), ios::out);
 
-        fout << "BookISBN,StudentRollID,IssueDate,ReturnDate,IsReturned,FineAmount,IsFinePaid" << endl;
+        fout << "BookISBN,StudentRollID,IssueDate,ReturnDate,IsReturned,FineAmount,IsFinePaid";
 
         for (int i = 0; i < issues.size(); i++) {
-            fout << issues[i] << endl;
+            fout << endl << issues[i];
         }
 
         fout.close();
@@ -638,9 +638,9 @@ class State {
 
 class App : protected State {
    public:
-    // App() {
-    //     State::readStateFromFiles();
-    // }
+    App() {
+        State::readStateFromFiles();
+    }
 
     ~App() {
         State::writeStateInFiles();
