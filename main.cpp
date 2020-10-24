@@ -433,7 +433,8 @@ class FileManager {
         fout << "RollID,Name,Branch,Password";
 
         for (int i = 0; i < students.size(); i++) {
-            fout << endl << students[i];
+            fout << endl
+                 << students[i];
         }
 
         fout.close();
@@ -444,7 +445,8 @@ class FileManager {
         fout << "ISBN,Name,Author,Publisher,Genere,Quantity";
 
         for (int i = 0; i < books.size(); i++) {
-            fout << endl << books[i];
+            fout << endl
+                 << books[i];
         }
 
         fout.close();
@@ -455,7 +457,8 @@ class FileManager {
         fout << "BookISBN,StudentRollID,IssueDate,ReturnDate,IsReturned,FineAmount,IsFinePaid";
 
         for (int i = 0; i < issues.size(); i++) {
-            fout << endl << issues[i];
+            fout << endl
+                 << issues[i];
         }
 
         fout.close();
@@ -466,7 +469,7 @@ class FileManager {
 
         ifstream fin(FileManager::studentFileName.c_str(), ios::in);
 
-        if(fin.fail()) {
+        if (fin.fail()) {
             return students;
         }
 
@@ -484,7 +487,7 @@ class FileManager {
 
         ifstream fin(FileManager::bookFileName.c_str(), ios::in);
 
-        if(fin.fail()) {
+        if (fin.fail()) {
             return books;
         }
 
@@ -502,7 +505,7 @@ class FileManager {
 
         ifstream fin(FileManager::issueFileName.c_str(), ios::in);
 
-        if(fin.fail()) {
+        if (fin.fail()) {
             return issues;
         }
 
@@ -669,7 +672,7 @@ class App : protected State {
             cin >> userInput;
 
             clearConsole();
-        
+
             switch (userInput) {
                 case 1:
                     cout << "Enter Roll ID: ";
@@ -681,10 +684,10 @@ class App : protected State {
                         this->showStudentMenu();
                     else
                         cout << "Authentication Failed" << endl;
-                
+
                     break;
 
-                case 2: ;
+                case 2:;
                     cout << "Enter Password: ";
                     cin >> password;
 
@@ -703,13 +706,13 @@ class App : protected State {
                     cout << "Enter a valid choice" << endl;
                     break;
             }
-        } while(userInput != 1 && userInput != 2 && userInput != 3);
+        } while (userInput != 1 && userInput != 2 && userInput != 3);
     }
 
     void showStudentMenu() {
         clearConsole();
     }
-    
+
     void showAdminMenu() {
         clearConsole();
     }
@@ -725,7 +728,7 @@ class App : protected State {
 
     void start() {
         // Menu
-        this->showMenu();                           
+        this->showMenu();
     }
 
     void stop() {
