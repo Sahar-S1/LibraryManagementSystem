@@ -846,7 +846,8 @@ class App : protected State {
             switch(userInput)
             {
                 case 1:
-                    // Issue
+                    State::addIssue(Issue::getIssueObjDetailsFromUser());
+                    clearConsole();
                     break;
                 
                 case 2:
