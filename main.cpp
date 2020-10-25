@@ -674,7 +674,6 @@ class State {
         this->books = FileManager::getAllBooks();
         this->issues = FileManager::getAllIssues();
     }
-
     void writeStateInFiles() {
         FileManager::writeStudents(this->students);
         FileManager::writeBooks(this->books);
@@ -685,22 +684,55 @@ class State {
         this->students.push_back(student);
         FileManager::writeStudents(this->students);
     }
-
     void addBook(Book book) {
         this->books.push_back(book);
         FileManager::writeBooks(this->books);
     }
-
     void addIssue(Issue issue) {
         this->issues.push_back(issue);
         FileManager::writeIssues(this->issues);
+    }
+
+    vector<Student> getStudents() {
+        return this->students;
+    }
+    vector<Book> getBooks() {
+        return this->books;
+    }
+    vector<Issue> getIssues() {
+        return this->issues;
+    }
+
+    Student* getStudentAt(int index) {
+        return &this->students[index];
+    }
+    Book* getBookAt(int index) {
+        return &this->books[index];
+    }
+    Issue* getIssueAt(int index) {
+        return &this->issues[index];
+    }
+
+    void displayStudents(vector<Student> students) {
+        for (int i = 0; i < students.size(); i++) {
+            cout << (i+1) << ". " << students[i] << endl;
+        }
+    }
+    void displayBooks(vector<Book> books) {
+        for (int i = 0; i < books.size(); i++) {
+            cout << (i+1) << ". " << books[i] << endl;
+        }
+    }
+    void displayIssues(vector<Issue> issues) {
+        for (int i = 0; i < issues.size(); i++) {
+            cout << (i+1) << ". " << issues[i] << endl;
+        }
     }
 
     bool validateAdmin(string password) {
         if(password == ADMIN_PASSWORD) return true;
         else return false;
     }
-
     bool validateStudent(string rollID, string password) {
         return true;
     }
@@ -830,11 +862,11 @@ class App : protected State {
                     break;
 
                 case 5:
-                    // Issue History
+                    State::displayIssues(State::getIssues());
                     break;
 
                 case 6:
-                    // Pending Books to be returned
+                    State::displayIssues(Query::getIssuesByPendingReturn(State::getIssues()));
                     break;
 
                 case 7:
