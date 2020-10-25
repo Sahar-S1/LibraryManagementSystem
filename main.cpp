@@ -3,12 +3,13 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include <conio.h>
 
 #include "packages/Date.h"  // https://github.com/Avikalp7/Date-Class
 
 using namespace std;
 
-const string ADMIN_PASSWORD = "1234";
+const string ADMIN_PASSWORD = "pass";
 const double FINE_PER_DAY = 100;
 
 DateFormat DATE_FORMAT("dd-mm-yyyy");
@@ -56,6 +57,37 @@ string date2string(const Date &date) {
     ostringstream ss;
     ss << date;
     return ss.str();
+}
+
+string getPasswordFromUser() {
+    const char BACKSPACE = 8;//ASCII code for BACKSPACE Key
+    const char ENTER = 13;//ASCII code for ENTER Key
+    string pass = "";//initialize string
+    char c = ' ';//initialize character 
+
+    while ((c = _getch()) != ENTER)
+    {
+        if (c == BACKSPACE)
+        {
+            if (pass.length() != 0)
+            {
+                cout << "\b \b";
+                pass.resize(pass.length() - 1); //resize the length of pass 
+            }
+        }
+        else if (c == 0 || c == 224)//when user press esc key
+        {
+            _getch();
+            continue;
+        }
+        else
+        {
+            pass.push_back(c);
+            cout << '*';
+        }
+    }
+    cout << endl;
+    return pass;
 }
 
 void clearConsole() {
@@ -644,7 +676,8 @@ class State {
     }
 
     bool validateAdmin(string password) {
-        return true;
+        if(password == ADMIN_PASSWORD) return true;
+        else return false;
     }
 
     bool validateStudent(string rollID, string password) {
@@ -675,7 +708,7 @@ class App : protected State {
                     cout << "Enter Roll ID: ";
                     cin >> rollId;
                     cout << "Enter Password: ";
-                    cin >> password;
+                    password = getPasswordFromUser();
 
                     if (State::validateStudent(rollId, password))
                         this->showStudentMenu();
@@ -686,7 +719,7 @@ class App : protected State {
 
                 case 2: ;
                     cout << "Enter Password: ";
-                    cin >> password;
+                    password = getPasswordFromUser();
 
                     if (State::validateAdmin(password))
                         this->showAdminMenu();
