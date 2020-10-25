@@ -75,11 +75,11 @@ string getPasswordFromUser() {
                 pass.resize(pass.length() - 1); //resize the length of pass 
             }
         }
-        else if (c == 0 || c == 224)//when user press esc key
-        {
-            _getch();
-            continue;
-        }
+        // else if (c == 0 || c == 224)//when user press esc key
+        // {
+        //     _getch();
+        //     continue;
+        // }
         else
         {
             pass.push_back(c);
@@ -127,6 +127,7 @@ class Student {
         string password;
 
         cout << "Enter your roll no: ";
+        cin.ignore();
         getline(cin, roll_Id);
 
         cout << "Enter your name: ";
@@ -224,6 +225,7 @@ class Book {
         int quantity;
 
         cout << "Enter Book's ISBN Number: ";
+        cin.ignore();
         getline(cin, isbnNumber);
 
         cout << "Enter Book's name: ";
@@ -379,6 +381,7 @@ class Issue {
         Date issueDate;
 
         cout << "Enter Student's Roll ID: ";
+        cin.ignore();
         getline(cin, studentRollID);
 
         cout << "Enter Book's ISBN Number: ";
@@ -678,6 +681,18 @@ class State {
         FileManager::writeIssues(this->issues);
     }
 
+    void addStudent(Student student) {
+        this->students.push_back(student);
+    }
+
+    void addBook(Book book) {
+        this->books.push_back(book);
+    }
+
+    void addIssue(Issue issue) {
+        this->issues.push_back(issue);
+    }
+
     bool validateAdmin(string password) {
         if(password == ADMIN_PASSWORD) return true;
         else return false;
@@ -898,11 +913,13 @@ class App : protected State {
 
             switch (userInput) {
                 case 1:
-                    // Book
+                    State::addBook(Book::getBookObjDetailsFromUser());
+                    clearConsole();
                     break;
 
                 case 2:
-                    // Student
+                    State::addStudent(Student::getStudentObjDetailsFromUser());
+                    clearConsole();
                     break;
 
                 case 3:
@@ -1027,7 +1044,7 @@ class App : protected State {
     }
 
     void stop() {
-        delete this;
+        State::writeStateInFiles();
     }
 };
 
