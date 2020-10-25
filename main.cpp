@@ -683,14 +683,17 @@ class State {
 
     void addStudent(Student student) {
         this->students.push_back(student);
+        FileManager::writeStudents(this->students);
     }
 
     void addBook(Book book) {
         this->books.push_back(book);
+        FileManager::writeBooks(this->books);
     }
 
     void addIssue(Issue issue) {
         this->issues.push_back(issue);
+        FileManager::writeIssues(this->issues);
     }
 
     bool validateAdmin(string password) {
@@ -1039,7 +1042,6 @@ class App : protected State {
     }
 
     void start() {
-        // Menu
         this->showMenu();
     }
 
