@@ -16,7 +16,7 @@ DateFormat DATE_FORMAT("dd-mm-yyyy");
 const Date NULL_DATE(D01, Jan, 1950);
 
 template <typename T>
-T StringToNumber(const string &str) {
+T stringTo(const string &str) {
     istringstream ss(str);
     T num;
     ss >> num;
@@ -24,7 +24,7 @@ T StringToNumber(const string &str) {
 }
 
 template <typename T>
-string NumberToString(T num) {
+string toString(T num) {
     ostringstream ss;
     ss << num;
     return ss.str();
@@ -279,7 +279,7 @@ class Book {
 
         vector<string> bookAttr = split(str, ',');
 
-        Book bookObj(bookAttr[0], bookAttr[1], bookAttr[2], bookAttr[3], bookAttr[4], StringToNumber<int>(bookAttr[5]));
+        Book bookObj(bookAttr[0], bookAttr[1], bookAttr[2], bookAttr[3], bookAttr[4], stringTo<int>(bookAttr[5]));
         return bookObj;
     }
 
@@ -295,7 +295,7 @@ class Book {
         str += ',' + bookObj.author;
         str += ',' + bookObj.publisher;
         str += ',' + bookObj.genere;
-        str += ',' + NumberToString<int>(bookObj.quantity);
+        str += ',' + toString<int>(bookObj.quantity);
 
         output << str;
 
@@ -402,7 +402,7 @@ class Issue {
 
         vector<string> issueAttr = split(str, ',');
 
-        Issue issue(issueAttr[0], issueAttr[1], Date(issueAttr[2].c_str()), Date(issueAttr[3].c_str()), string2bool(issueAttr[4]), StringToNumber<double>(issueAttr[5]), string2bool(issueAttr[6]));
+        Issue issue(issueAttr[0], issueAttr[1], Date(issueAttr[2].c_str()), Date(issueAttr[3].c_str()), string2bool(issueAttr[4]), stringTo<double>(issueAttr[5]), string2bool(issueAttr[6]));
         return issue;
     }
 
@@ -417,9 +417,9 @@ class Issue {
         str += ',' + issueObj.bookISBN;
         str += ',' + date2string(issueObj.issueDate);
         str += ',' + date2string(issueObj.returnDate);
-        str += ',' + issueObj.isReturned;
-        str += ',' + NumberToString<double>(issueObj.fineAmount);
-        str += ',' + issueObj.isFinePaid;
+        str += ',' + toString<bool>(issueObj.isReturned);
+        str += ',' + toString<double>(issueObj.fineAmount);
+        str += ',' + toString<bool>(issueObj.isFinePaid);
 
         output << str;
 
