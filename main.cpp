@@ -725,7 +725,7 @@ class State {
             cout << "Failed to add " << student.getName() << endl;
         }        
     }
-    
+
     void addBook(Book book) {
         bool isBookUnique = true;
         for (int i = 0; i < this->books.size(); i++) {
@@ -1034,7 +1034,7 @@ class App : protected State {
         string rollID;
     
         do {
-            cout << "1.Issue \n2.Return \n3.Add New \n4.Manage \n5.Issue History \n6.Pending Books to be returned \n7.Manage Fines \n8.Reset Password \n9.Student Details \n10.Exit" << endl ;
+            cout << "1.Issue \n2.Return \n3.Add New \n4.Manage \n5.Issue History \n6.Pending Books to be returned \n7.Manage Fines \n8.Reset Password \n9.Student Login \n10.Exit" << endl ;
             cout << "Enter your choice: ";
             cin >> userInput;
 
