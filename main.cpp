@@ -934,7 +934,10 @@ class App : protected State {
             switch(userInput)
             {
                 case 1:
+                    clearConsole();
                     State::addIssue(Issue::getIssueObjDetailsFromUser());
+                    cout << "Press any key to exit...";
+                    _getch();
                     clearConsole();
                     break;
                 
