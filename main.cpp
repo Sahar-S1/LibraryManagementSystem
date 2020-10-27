@@ -50,16 +50,6 @@ Date getDateFromUser() {
     return date;
 }
 
-bool string2bool(const string &v) {
-    return !v.empty() && (atoi(v.c_str()) != 0);
-}
-
-string date2string(const Date &date) {
-    ostringstream ss;
-    ss << date;
-    return ss.str();
-}
-
 string getPasswordFromUser() {
     const char BACKSPACE = 8;//ASCII code for BACKSPACE Key
     const char ENTER = 13;//ASCII code for ENTER Key
@@ -416,7 +406,7 @@ class Issue {
 
         vector<string> issueAttr = split(str, ',');
 
-        Issue issue(issueAttr[0], issueAttr[1], issueAttr[2], Date(issueAttr[3].c_str()), Date(issueAttr[4].c_str()), string2bool(issueAttr[5]), stringTo<double>(issueAttr[6]), string2bool(issueAttr[7]));
+        Issue issue(issueAttr[0], issueAttr[1], issueAttr[2], Date(issueAttr[3].c_str()), Date(issueAttr[4].c_str()), stringTo<bool>(issueAttr[5]), stringTo<double>(issueAttr[6]), stringTo<bool>(issueAttr[7]));
         return issue;
     }
 
@@ -430,8 +420,8 @@ class Issue {
         str += issueObj.issueID;
         str += ',' + issueObj.studentRollID;
         str += ',' + issueObj.bookISBN;
-        str += ',' + date2string(issueObj.issueDate);
-        str += ',' + date2string(issueObj.returnDate);
+        str += ',' + toString<Date>(issueObj.issueDate);
+        str += ',' + toString<Date>(issueObj.returnDate);
         str += ',' + toString<bool>(issueObj.isReturned);
         str += ',' + toString<double>(issueObj.fineAmount);
         str += ',' + toString<bool>(issueObj.isFinePaid);
