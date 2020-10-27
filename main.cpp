@@ -167,7 +167,7 @@ class Student {
         return this->branch;
     }
 
-    bool vlaidatePassword(string pass) {
+    bool validatePassword(string pass) {
         return this->password == pass;
     }
 
@@ -761,8 +761,18 @@ class State {
         else return false;
     }
     bool validateStudent(string rollID, string password) {
-        if(Query::getStudentByRollID(students, rollID).vlaidatePassword(password)) return true;
+        if(Query::getStudentByRollID(students, rollID).validatePassword(password)) return true;
         else return false;
+    }
+
+    void changePassword(string rollID, string pass) {
+        for (int i = 0; i < this->students.size(); i++) {
+            if(students[i].getRollID() == rollID) {
+                students[i].resetPassword(pass);
+                FileManager::writeStudents(this->students);
+                return;
+            }
+        }
     }
 };
 
@@ -792,7 +802,7 @@ class App : protected State {
                     password = getPasswordFromUser();
 
                     if (State::validateStudent(rollId, password))
-                        this->showStudentMenu();
+                        this->showStudentMenu(rollId);
                     else
                         cout << "Authentication Failed" << endl;
 
@@ -820,34 +830,60 @@ class App : protected State {
         } while (userInput != 1 && userInput != 2 && userInput != 3);
     }
 
-    void showStudentMenu() {
+    void showStudentMenu(string rollID) {
         clearConsole();
         int userInput;
     
         do{
-            cout << "1.Search \n2.Issue history \n3.Pending Books to be returned \n4.Fine Log \n5.Reset Password \n6.Exit" << endl ;
+            cout << "1.Search \n2.Issue history \n3.Pending Books to be returned \n4.Pending Fines \n5.Reset Password \n6.Exit" << endl ;
             cout << "Enter your choice: ";
             cin >> userInput;
 
+            string pass1, pass2;
             switch(userInput) {
                 case 1:
                     this->showSearchBookMenu();
                     break;
                 
                 case 2:
-                    // Issue history
+                    clearConsole();
+                    State::displayIssues(Query::getIssuesByStudentRollID(State::getIssues(), rollID));
+                    cout << "Press any key to exit...";
+                    _getch();
+                    clearConsole();
                     break;
 
                 case 3:
-                    // Pending books to be returned
+                    clearConsole();
+                    State::displayIssues(Query::getIssuesByPendingReturn(Query::getIssuesByStudentRollID(State::getIssues(), rollID)));
+                    cout << "Press any key to exit...";
+                    _getch();
+                    clearConsole();
                     break;
 
                 case 4:
-                    // Fine log
+                    clearConsole();
+                    State::displayIssues(Query::getIssuesByPendingFine(Query::getIssuesByStudentRollID(State::getIssues(), rollID)));
+                    cout << "Press any key to exit...";
+                    _getch();
+                    clearConsole();
                     break;
 
                 case 5:
-                    // Restet password
+                    clearConsole();
+                    cout << "Enter new password: ";
+                    pass1 = getPasswordFromUser();
+                    cout << "Confirm password: ";
+                    pass2 = getPasswordFromUser();
+                    if(pass1 == pass2) {
+                        State::changePassword(rollID, pass1);
+                        cout << "Password changed successfully" << endl;
+                    } else {
+                        cout << "Invalid Password" << endl;
+                    }
+                    cout << "Press any key to exit...";
+                    _getch();
+                    clearConsole();
                     break;
 
                 case 6:
@@ -941,25 +977,59 @@ class App : protected State {
             cout << "Enter your choice: ";
             cin >> userInput;
 
+            string author, publisher, genere, name;
+
             switch (userInput) {
                 case 1:
-                    // By Author
+                    clearConsole();
+                    cout << "Enter author name: ";
+                    cin >> author;
+                    cout << endl;
+                    State::displayBooks(Query::getBooksByAuthor(State::getBooks(), author));
+                    cout << "Press any key to exit...";
+                    _getch();
+                    clearConsole();
                 break;
 
                 case 2:
-                    // By Publisher
+                    clearConsole();
+                    cout << "Enter publisher name: ";
+                    cin >> publisher;
+                    cout << endl;
+                    State::displayBooks(Query::getBooksByPublisher(State::getBooks(), publisher));
+                    cout << "Press any key to exit...";
+                    _getch();
+                    clearConsole();
                 break;
 
                 case 3:
-                    // By Genre
+                    clearConsole();
+                    cout << "Enter genere name: ";
+                    cin >> genere;
+                    cout << endl;
+                    State::displayBooks(Query::getBooksByGenere(State::getBooks(), genere));
+                    cout << "Press any key to exit...";
+                    _getch();
+                    clearConsole();
                 break;
 
                 case 4:
-                    // By Name
+                    clearConsole();
+                    cout << "Enter book name: ";
+                    cin >> name;
+                    cout << endl;
+                    State::displayBooks(Query::getBooksByName(State::getBooks(), name));
+                    cout << "Press any key to exit...";
+                    _getch();
+                    clearConsole();
                 break;
 
                 case 5:
-                    // All
+                    clearConsole();
+                    State::displayBooks(State::getBooks());
+                    cout << "Press any key to exit...";
+                    _getch();
+                    clearConsole();
                 break;
 
                 case 6:
