@@ -718,8 +718,58 @@ class State {
     }
 
     void addIssue(Issue issue) {
-        this->issues.push_back(issue);
-        FileManager::writeIssues(this->issues);
+        bool isStudentValid = false;
+        for (int i = 0; i < this->students.size(); i++) {
+            if(this->students[i].getRollID() == issue.getStudentRollID()) {
+                isStudentValid = true;
+                break;
+            }
+        }
+
+        bool isBookValid = false;
+        for (int i = 0; i < this->books.size(); i++) {
+            if(this->books[i].getISBN() == issue.getBookISBN()) {
+                isBookValid = true;
+                break;
+            }
+        }
+        
+        bool isBookAvailable = false;
+        if (isBookValid) {
+            Book thisBook = Query::getBookByISBN(this->books ,issue.getBookISBN());
+            vector<Issue> thisBookIssues = Query::getIssuesByBookISBN(this->issues, thisBook.getISBN());
+            vector<Issue> thisBookPendingReturnIssues = Query::getIssuesByPendingReturn(thisBookIssues);
+            int thisBookPendingReturnIssuesCount = thisBookPendingReturnIssues.size();
+            isBookAvailable = (thisBook.getQuantity() - thisBookPendingReturnIssuesCount >= 1) ? true : false;
+        }
+
+        Student thisStudent("", "", "", "");
+        Book thisBook("", "", "", "", "", 0);
+        if (isStudentValid) {
+            thisStudent = Query::getStudentByRollID(this->students ,issue.getStudentRollID());
+        }
+        if (isBookValid) {
+            thisBook = Query::getBookByISBN(this->books ,issue.getBookISBN());
+        }
+
+        bool isIssueValid = isStudentValid && isBookValid && isBookAvailable;
+
+        if (isIssueValid) {
+            this->issues.push_back(issue);
+            FileManager::writeIssues(this->issues);
+            cout << "Issue Successful!" << endl;
+        } else {
+            if (!isStudentValid) {
+                cout << "Student with roll id " << issue.getStudentRollID() << " not found" << endl;
+            }
+            if (!isBookValid) {
+                cout << "Book with ISBN " << issue.getBookISBN() << " not found" << endl;
+            }
+            if (isBookValid && !isBookAvailable) {
+                cout << "Sorry!, " << thisBook.getName() << " book is not avaliable" << endl;
+            }
+            cout << "Issue Failed" << endl;
+        }
     }
 
     vector<Student> getStudents() {
