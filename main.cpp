@@ -167,8 +167,8 @@ class Student {
         return this->branch;
     }
 
-    string getPassword() {
-        return this->password;
+    bool vlaidatePassword(string pass) {
+        return this->password == pass;
     }
 
     void resetPassword(string newPassword) {
@@ -714,18 +714,40 @@ class State {
     }
 
     void displayStudents(vector<Student> students) {
+        cout << "RollID Name Branch" << endl;
         for (int i = 0; i < students.size(); i++) {
-            cout << (i+1) << ". " << students[i] << endl;
+            cout << (i+1) << ". ";
+            cout << students[i].getRollID() << " ";
+            cout << students[i].getName() << " ";
+            cout << students[i].getBranch() << endl;
         }
     }
     void displayBooks(vector<Book> books) {
+        cout << "ISBN Name Author xQuantity" << endl;
         for (int i = 0; i < books.size(); i++) {
-            cout << (i+1) << ". " << books[i] << endl;
+            cout << (i+1) << ". ";
+            cout << books[i].getISBN() << " ";
+            cout << books[i].getName() << " ";
+            cout << books[i].getAuthor() << " ";
+            cout << "x" << books[i].getQuantity() << endl;
         }
     }
     void displayIssues(vector<Issue> issues) {
+        cout << "BookName StudentName IssueDate ReturnDate" << endl;
+        cout << "FineAmount Paid/NotPaid" << endl;
+        cout << endl;
         for (int i = 0; i < issues.size(); i++) {
-            cout << (i+1) << ". " << issues[i] << endl;
+            cout << (i+1) << ". ";
+            cout << Query::getBookByISBN(books,issues[i].getBookISBN()).getName() << " ";
+            cout << Query::getStudentByRollID(students,issues[i].getStudentRollID()).getName() << " ";
+            cout << issues[i].getIssueDate() << " ";
+            cout << (issues[i].getIsReturned() ? "Not Returned" : toString<Date>(issues[i].getReturnDate())) << endl;
+            
+            cout << (i+1) << ". ";
+            cout << issues[i].getFineAmount() << " ";
+            cout << (issues[i].getIsFinePaid() ? "Paid" : "Not Paid") << endl;
+
+            cout << endl;
         }
     }
 
@@ -734,7 +756,8 @@ class State {
         else return false;
     }
     bool validateStudent(string rollID, string password) {
-        return true;
+        if(Query::getStudentByRollID(students, rollID).vlaidatePassword(password)) return true;
+        else return false;
     }
 };
 
@@ -863,10 +886,12 @@ class App : protected State {
                     break;
 
                 case 5:
+                    clearConsole();
                     State::displayIssues(State::getIssues());
                     break;
 
                 case 6:
+                    clearConsole();
                     State::displayIssues(Query::getIssuesByPendingReturn(State::getIssues()));
                     break;
 
