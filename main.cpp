@@ -118,7 +118,6 @@ class Student {
         string password;
 
         cout << "Enter your roll no: ";
-        cin.ignore();
         getline(cin, roll_Id);
 
         cout << "Enter your name: ";
@@ -216,7 +215,6 @@ class Book {
         int quantity;
 
         cout << "Enter Book's ISBN Number: ";
-        cin.ignore();
         getline(cin, isbnNumber);
 
         cout << "Enter Book's name: ";
@@ -380,7 +378,6 @@ class Issue {
         Date issueDate;
 
         cout << "Enter Student's Roll ID: ";
-        cin.ignore();
         getline(cin, studentRollID);
 
         cout << "Enter Book's ISBN Number: ";
