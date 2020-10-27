@@ -893,11 +893,17 @@ class App : protected State {
                 case 5:
                     clearConsole();
                     State::displayIssues(State::getIssues());
+                    cout << "Press any key to exit...";
+                    _getch();
+                    clearConsole();
                     break;
 
                 case 6:
                     clearConsole();
                     State::displayIssues(Query::getIssuesByPendingReturn(State::getIssues()));
+                    cout << "Press any key to exit...";
+                    _getch();
+                    clearConsole();
                     break;
 
                 case 7:
