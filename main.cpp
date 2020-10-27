@@ -954,7 +954,7 @@ class App : protected State {
                     cout << "\nEnter Roll ID: ";
                     cin >> rollID;
 
-                    this->showStudentDetailsMenu(rollID);
+                    this->showStudentMenu(rollID);
                     break;
 
                 case 10:
@@ -1135,40 +1135,6 @@ class App : protected State {
                     break;
             }
         } while(userInput != 3);
-    }
-
-    void showStudentDetailsMenu(string rollID) {
-        clearConsole();
-        int userInput;
-        
-        do {
-            cout << "1.Issue history \n2.Pending books to be returned \n3.Fine logs \n4.Exit" << endl;
-            cout << "Enter your choice: ";
-            cin >> userInput;
-
-            switch (userInput) {
-                case 1:
-                    // Issue history
-                    break;
-
-                case 2:
-                    // Pending books to be returned
-                    break;
-
-                case 3:
-                    // Pending books to be returned
-                    break;
-                
-                case 4:
-                    clearConsole();
-                    return;
-                    break;
-
-                default:
-                    cout << "\nEnter a valid choice";
-                    break;
-            }
-        }while(userInput != 4);
     }
 
    public:
