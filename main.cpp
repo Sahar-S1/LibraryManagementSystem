@@ -118,6 +118,7 @@ class Student {
         string password;
 
         cout << "Enter your roll no: ";
+        cin.ignore();
         getline(cin, roll_Id);
 
         cout << "Enter your name: ";
@@ -136,7 +137,6 @@ class Student {
     static Student getStudentObjFromInputStream(istream &inputStream) {
         string str;
 
-        inputStream.ignore();
         getline(inputStream, str);
 
         vector<string> studentAttr = split(str, ',');
@@ -215,6 +215,7 @@ class Book {
         int quantity;
 
         cout << "Enter Book's ISBN Number: ";
+        cin.ignore();
         getline(cin, isbnNumber);
 
         cout << "Enter Book's name: ";
@@ -263,7 +264,6 @@ class Book {
     static Book getBookObjFromInputStream(istream &inputStream) {
         string str;
 
-        inputStream.ignore();
         getline(inputStream, str);
 
         vector<string> bookAttr = split(str, ',');
@@ -378,6 +378,7 @@ class Issue {
         Date issueDate;
 
         cout << "Enter Student's Roll ID: ";
+        cin.ignore();
         getline(cin, studentRollID);
 
         cout << "Enter Book's ISBN Number: ";
@@ -398,7 +399,6 @@ class Issue {
     static Issue getIssueObjFromInputStream(istream &inputStream) {
         string str;
 
-        inputStream.ignore();
         getline(inputStream, str);
 
         vector<string> issueAttr = split(str, ',');
