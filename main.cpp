@@ -688,6 +688,26 @@ class State {
         FileManager::writeIssues(this->issues);
     }
 
+    vector<Student> getStudents() {
+        return this->students;
+    }
+    vector<Book> getBooks() {
+        return this->books;
+    }
+    vector<Issue> getIssues() {
+        return this->issues;
+    }
+
+    Student* getStudentAt(int index) {
+        return &this->students[index];
+    }
+    Book* getBookAt(int index) {
+        return &this->books[index];
+    }
+    Issue* getIssueAt(int index) {
+        return &this->issues[index];
+    }
+
     void addStudent(Student student) {
         bool isStudentUnique = true;
         for (int i = 0; i < this->students.size(); i++) {
@@ -705,6 +725,7 @@ class State {
             cout << "Failed to add " << student.getName() << endl;
         }        
     }
+    
     void addBook(Book book) {
         bool isBookUnique = true;
         for (int i = 0; i < this->books.size(); i++) {
@@ -826,26 +847,6 @@ class State {
         } else {
             cout << "Fine Pay Failed due to some internal error (Invalid issueID = \"" << issueID << "\")" << endl;
         }
-    }
-
-    vector<Student> getStudents() {
-        return this->students;
-    }
-    vector<Book> getBooks() {
-        return this->books;
-    }
-    vector<Issue> getIssues() {
-        return this->issues;
-    }
-
-    Student* getStudentAt(int index) {
-        return &this->students[index];
-    }
-    Book* getBookAt(int index) {
-        return &this->books[index];
-    }
-    Issue* getIssueAt(int index) {
-        return &this->issues[index];
     }
 
     void displayStudents(vector<Student> students) {
