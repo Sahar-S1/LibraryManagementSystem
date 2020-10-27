@@ -696,13 +696,40 @@ class State {
     }
 
     void addStudent(Student student) {
-        this->students.push_back(student);
-        FileManager::writeStudents(this->students);
+        bool isStudentUnique = true;
+        for (int i = 0; i < this->students.size(); i++) {
+            if(this->students[i].getRollID() == student.getRollID()) {
+                isStudentUnique = false;
+            }
+        }
+
+        if (isStudentUnique) {
+            this->students.push_back(student);
+            FileManager::writeStudents(this->students);
+            cout << "Added " << student.getName() << " successfully!" << endl;
+        } else {
+            cout << "Already a student with rollID " << student.getRollID() << endl;
+            cout << "Failed to add " << student.getName() << endl;
+        }        
     }
     void addBook(Book book) {
-        this->books.push_back(book);
-        FileManager::writeBooks(this->books);
+        bool isBookUnique = true;
+        for (int i = 0; i < this->books.size(); i++) {
+            if(this->books[i].getISBN() == book.getISBN()) {
+                isBookUnique = false;
+            }
+        }
+
+        if (isBookUnique) {
+            this->books.push_back(book);
+            FileManager::writeBooks(this->books);
+            cout << "Added " << book.getName() << " successfully!" << endl;
+        } else {
+            cout << "Already a book with ISBN number " << book.getISBN() << endl;
+            cout << "Failed to add " << book.getName() << endl;
+        }        
     }
+
     void addIssue(Issue issue) {
         this->issues.push_back(issue);
         FileManager::writeIssues(this->issues);
@@ -1065,12 +1092,18 @@ class App : protected State {
 
             switch (userInput) {
                 case 1:
+                    clearConsole();
                     State::addBook(Book::getBookObjDetailsFromUser());
+                    cout << "Press any key to exit...";
+                    _getch();
                     clearConsole();
                     break;
 
                 case 2:
+                    clearConsole();
                     State::addStudent(Student::getStudentObjDetailsFromUser());
+                    cout << "Press any key to exit...";
+                    _getch();
                     clearConsole();
                     break;
 
