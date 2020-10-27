@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <conio.h>
+#include <time.h>
 
 #include "packages/Date.h"  // https://github.com/Avikalp7/Date-Class
 
@@ -308,6 +309,7 @@ class Book {
 /* Issue Class => Start */
 
 class Issue {
+    string issueID;
     string studentRollID;
     string bookISBN;
     Date issueDate;
@@ -319,6 +321,8 @@ class Issue {
    public:
     // Issue Constructor
     Issue(string studentRollID, string bookISBN, Date issueDate) {
+        this->issueID = studentRollID + bookISBN + toString<Date>(issueDate) + toString<long>(time(0));
+
         this->studentRollID = studentRollID;
         this->bookISBN = bookISBN;
         this->issueDate = issueDate;
@@ -328,7 +332,8 @@ class Issue {
         this->fineAmount = 0;
         this->isFinePaid = true;
     }
-    Issue(string studentRollID, string bookISBN, Date issueDate, Date returnDate, bool isReturned, double fineAmount, bool isFinePaid) {
+    Issue(string issueID, string studentRollID, string bookISBN, Date issueDate, Date returnDate, bool isReturned, double fineAmount, bool isFinePaid) {
+        this->issueID = issueID;
         this->studentRollID = studentRollID;
         this->bookISBN = bookISBN;
         this->issueDate = issueDate;
@@ -336,6 +341,10 @@ class Issue {
         this->isReturned = isReturned;
         this->fineAmount = fineAmount;
         this->isFinePaid = isFinePaid;
+    }
+
+    string getIssueID() {
+        return this->issueID;
     }
 
     string getStudentRollID() {
@@ -407,7 +416,7 @@ class Issue {
 
         vector<string> issueAttr = split(str, ',');
 
-        Issue issue(issueAttr[0], issueAttr[1], Date(issueAttr[2].c_str()), Date(issueAttr[3].c_str()), string2bool(issueAttr[4]), stringTo<double>(issueAttr[5]), string2bool(issueAttr[6]));
+        Issue issue(issueAttr[0], issueAttr[1], issueAttr[2], Date(issueAttr[3].c_str()), Date(issueAttr[4].c_str()), string2bool(issueAttr[5]), stringTo<double>(issueAttr[6]), string2bool(issueAttr[7]));
         return issue;
     }
 
@@ -418,7 +427,8 @@ class Issue {
     friend ostream &operator<<(ostream &output, const Issue &issueObj) {
         string str = "";
 
-        str += issueObj.studentRollID;
+        str += issueObj.issueID;
+        str += ',' + issueObj.studentRollID;
         str += ',' + issueObj.bookISBN;
         str += ',' + date2string(issueObj.issueDate);
         str += ',' + date2string(issueObj.returnDate);
@@ -494,7 +504,7 @@ class FileManager {
     static void writeIssues(vector<Issue> issues) {
         ofstream fout(FileManager::issueFileName.c_str(), ios::out);
 
-        fout << "BookISBN,StudentRollID,IssueDate,ReturnDate,IsReturned,FineAmount,IsFinePaid";
+        fout << "IssueID,BookISBN,StudentRollID,IssueDate,ReturnDate,IsReturned,FineAmount,IsFinePaid";
 
         for (int i = 0; i < issues.size(); i++) {
             fout << endl
