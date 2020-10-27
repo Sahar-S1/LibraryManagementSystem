@@ -394,6 +394,11 @@ class Issue {
         return obj;
     }
 
+    void getReturnDetailsFromUser() {
+        cout << "Enter Return Date in format dd-mm-yyyy: ";
+        this->returnBook(getDateFromUser());
+    }
+
     static Issue getIssueObjFromInputStream(istream &inputStream) {
         string str;
 
