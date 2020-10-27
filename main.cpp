@@ -11,7 +11,9 @@
 using namespace std;
 
 const string ADMIN_PASSWORD = "pass";
+
 const double FINE_PER_DAY = 100;
+const int ALLOWED_DAYS_TO_KEEP_BOOK = 7;
 
 DateFormat DATE_FORMAT("dd-mm-yyyy");
 const Date NULL_DATE(D01, Jan, 1950);
@@ -368,8 +370,12 @@ class Issue {
 
         this->returnDate = returnDate;
         this->isReturned = true;
-        this->fineAmount = (dateDiff > 7) ? (dateDiff - 7) * FINE_PER_DAY : 0;
+        this->fineAmount = (dateDiff > ALLOWED_DAYS_TO_KEEP_BOOK) ? (dateDiff - ALLOWED_DAYS_TO_KEEP_BOOK) * FINE_PER_DAY : 0;
         this->isFinePaid = (fineAmount > 0) ? false : true;
+    }
+
+    void payFine() {
+        this->isFinePaid = true;
     }
 
     static Issue getIssueObjDetailsFromUser() {
@@ -773,6 +779,55 @@ class State {
         }
     }
 
+    string getIssueIDFromUser(vector<Issue> issues, string message) {
+        int userInput;
+        
+        this->displayIssues(issues);
+        
+        cout << message;
+        cin >> userInput;
+
+        return issues[userInput-1].getIssueID();
+    }
+
+    void returnBook(string issueID) {
+        int issueIdx = -1;
+
+        bool isIssueIdValid = false;
+        for (int i = 0; i < this->issues.size(); i++) {
+            if (this->issues[i].getIssueID() == issueID) {
+                isIssueIdValid = true;
+                issueIdx = i;
+            }
+        }
+    
+        if(isIssueIdValid) {
+            this->issues[issueIdx].getReturnDetailsFromUser();
+            cout << "Return Successful!" << endl;
+        } else {
+            cout << "Return Failed due to some internal error (Invalid issueID = \"" << issueID << "\")" << endl;
+        }
+    }
+
+    void payFine(string issueID) {
+        int issueIdx = -1;
+
+        bool isIssueIdValid = false;
+        for (int i = 0; i < this->issues.size(); i++) {
+            if (this->issues[i].getIssueID() == issueID) {
+                isIssueIdValid = true;
+                issueIdx = i;
+            }
+        }
+    
+        if(isIssueIdValid) {
+            this->issues[issueIdx].payFine();
+            cout << "Fine Paid Successful!" << endl;
+        } else {
+            cout << "Fine Pay Failed due to some internal error (Invalid issueID = \"" << issueID << "\")" << endl;
+        }
+    }
+
     vector<Student> getStudents() {
         return this->students;
     }
@@ -993,7 +1048,16 @@ class App : protected State {
                     break;
                 
                 case 2:
-                    // Return
+                    clearConsole();
+                    State::returnBook(
+                        State::getIssueIDFromUser(
+                            Query::getIssuesByPendingReturn(State::getIssues()),
+                            "Select Which Book to be Returned: "
+                        )
+                    );
+                    cout << "Press any key to exit...";
+                    _getch();
+                    clearConsole();
                     break;
 
                 case 3:
@@ -1195,14 +1259,23 @@ class App : protected State {
         int userInput;
 
         do{
-            cout << "1.Fines paid or not \n2.Fine per day \n3.Exit" << endl;
+            cout << "1.Pay Fine \n2.Fine per day \n3.Exit" << endl;
             cout << "Enter your choice: ";
             cin >> userInput;
 
             switch (userInput)
             {
                 case 1:
-                    // Fines paid or not
+                    clearConsole();
+                    State::payFine(
+                        State::getIssueIDFromUser(
+                            Query::getIssuesByPendingFine(State::getIssues()),
+                            "Select Which Fine is to be Paid: "
+                        )
+                    );
+                    cout << "Press any key to exit...";
+                    _getch();
+                    clearConsole();
                     break;
 
                 case 2:
