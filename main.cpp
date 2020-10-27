@@ -744,6 +744,20 @@ class State {
         }        
     }
 
+    void deleteBook(int idx) {
+        Book temp = this->books[idx];
+        this->books.erase(this->books.begin() + idx);
+        FileManager::writeBooks(this->books);
+        cout << "Successfully Deleted " << temp.getName() << " book" << endl;
+    }
+    
+    void deleteStudent(int idx) {
+        Student temp = this->students[idx];
+        this->students.erase(this->students.begin() + idx);
+        FileManager::writeStudents(this->students);
+        cout << "Successfully Deleted " << temp.getName() << endl;
+    }
+
     void addIssue(Issue issue) {
         bool isStudentValid = false;
         for (int i = 0; i < this->students.size(); i++) {
@@ -1034,7 +1048,7 @@ class App : protected State {
         string rollID;
     
         do {
-            cout << "1.Issue \n2.Return \n3.Add New \n4.Manage \n5.Issue History \n6.Pending Books to be returned \n7.Manage Fines \n8.Reset Password \n9.Student Login \n10.Exit" << endl ;
+            cout << "1.Issue \n2.Return \n3.Add New \n4.Delete \n5.Issue History \n6.Pending Books to be returned \n7.Manage Fines \n8.Reset Password \n9.Student Login \n10.Exit" << endl ;
             cout << "Enter your choice: ";
             cin >> userInput;
 
@@ -1066,7 +1080,7 @@ class App : protected State {
                     break;
 
                 case 4:
-                    this->showManageMenu();
+                    this->showDeleteMenu();
                     break;
 
                 case 5:
@@ -1225,7 +1239,7 @@ class App : protected State {
         } while(userInput != 3);
     }
 
-    void showManageMenu() {
+    void showDeleteMenu() {
         clearConsole();
         int userInput;
 
@@ -1234,13 +1248,29 @@ class App : protected State {
             cout << "Enter your choice: ";
             cin >> userInput;
 
+            int deleteIdx;
+
             switch (userInput) {
                 case 1:
-                    // Book
+                    clearConsole();
+                    State::displayBooks(State::getBooks());
+                    cout << "Select which book to delete: ";
+                    cin >> deleteIdx;
+                    State::deleteBook((deleteIdx-1));
+                    cout << "Press any key to exit...";
+                    _getch();
+                    clearConsole();
                     break;
 
                 case 2:
-                    // Student
+                    clearConsole();
+                    State::displayStudents(State::getStudents());
+                    cout << "Select which student to delete: ";
+                    cin >> deleteIdx;
+                    State::deleteStudent((deleteIdx-1));
+                    cout << "Press any key to exit...";
+                    _getch();
+                    clearConsole();
                     break;
 
                 case 3:
