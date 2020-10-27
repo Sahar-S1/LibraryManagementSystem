@@ -491,7 +491,7 @@ class FileManager {
     static void writeIssues(vector<Issue> issues) {
         ofstream fout(FileManager::issueFileName.c_str(), ios::out);
 
-        fout << "IssueID,BookISBN,StudentRollID,IssueDate,ReturnDate,IsReturned,FineAmount,IsFinePaid";
+        fout << "IssueID,StudentRollID,BookISBN,IssueDate,ReturnDate,IsReturned,FineAmount,IsFinePaid";
 
         for (int i = 0; i < issues.size(); i++) {
             fout << endl
@@ -740,6 +740,7 @@ class State {
             vector<Issue> thisBookIssues = Query::getIssuesByBookISBN(this->issues, thisBook.getISBN());
             vector<Issue> thisBookPendingReturnIssues = Query::getIssuesByPendingReturn(thisBookIssues);
             int thisBookPendingReturnIssuesCount = thisBookPendingReturnIssues.size();
+            cout << thisBookPendingReturnIssuesCount;
             isBookAvailable = (thisBook.getQuantity() - thisBookPendingReturnIssuesCount >= 1) ? true : false;
         }
 
