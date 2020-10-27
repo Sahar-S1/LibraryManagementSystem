@@ -10,10 +10,14 @@
 
 using namespace std;
 
-const string ADMIN_PASSWORD = "pass";
+namespace configuration {
+    string ADMIN_PASSWORD = "pass";
 
-const double FINE_PER_DAY = 100;
-const int ALLOWED_DAYS_TO_KEEP_BOOK = 7;
+    double FINE_PER_DAY = 100;
+    int ALLOWED_DAYS_TO_KEEP_BOOK = 7;
+}
+
+using namespace configuration;
 
 DateFormat DATE_FORMAT("dd-mm-yyyy");
 const Date NULL_DATE(D01, Jan, 1950);
@@ -95,6 +99,28 @@ void clearConsole() {
     // CSI[2J clears screen, CSI[H moves the cursor to top-left corner
     cout << "\x1B[2J\x1B[H";
 }
+
+/* Config Class => Start */
+
+class Config {
+  public:
+    static string getConfigString() {
+        string str = "";
+        str += ADMIN_PASSWORD;
+        str += "," + toString<double>(FINE_PER_DAY);
+        str += "," + toString<int>(ALLOWED_DAYS_TO_KEEP_BOOK);
+        return str;
+    }
+
+    static void setConfig(string config) {
+        vector<string> configAttr = split(config, ',');
+        ADMIN_PASSWORD = configAttr[0];
+        FINE_PER_DAY = stringTo<double>(configAttr[1]);
+        ALLOWED_DAYS_TO_KEEP_BOOK = stringTo<int>(configAttr[2]);
+    }
+};
+
+/* Config Class => End */
 
 /* Student class => Start */
 
@@ -465,11 +491,23 @@ const Issue NullChecker::NULL_ISSUE = Issue("", "", NULL_DATE);
 /* FileManager Class => Start */
 
 class FileManager {
+    static const string configFileName;
     static const string studentFileName;
     static const string bookFileName;
     static const string issueFileName;
 
    public:
+    static void writeConfig() {
+        ofstream fout(FileManager::configFileName.c_str(), ios::out);
+
+        fout << "AdminPassword,FineAmountPerDay,AllowedDaysToKeepFine";
+
+        fout << endl
+             << Config::getConfigString();
+
+        fout.close();
+    }
+
     static void writeStudents(vector<Student> students) {
         ofstream fout(FileManager::studentFileName.c_str(), ios::out);
 
@@ -505,6 +543,20 @@ class FileManager {
         }
 
         fout.close();
+    }
+
+    static void getSetConfig() {
+        ifstream fin(FileManager::configFileName.c_str(), ios::in);
+
+        if (fin.fail()) {
+            return;
+        }
+
+        string temp;
+        getline(fin, temp);
+        
+        getline(fin, temp);
+        Config::setConfig(temp);
     }
 
     static vector<Student> getAllStudents() {
@@ -563,6 +615,7 @@ class FileManager {
     }
 };
 
+const string FileManager::configFileName = "data/Config.csv";
 const string FileManager::studentFileName = "data/Students.csv";
 const string FileManager::bookFileName = "data/Books.csv";
 const string FileManager::issueFileName = "data/Issues.csv";
@@ -1052,6 +1105,8 @@ class App : protected State {
             cout << "Enter your choice: ";
             cin >> userInput;
 
+            string pass1, pass2;
+
             switch(userInput)
             {
                 case 1:
@@ -1104,7 +1159,21 @@ class App : protected State {
                     break;
 
                 case 8:
-                    // Reset Password 
+                    clearConsole();
+                    cout << "Enter new password: ";
+                    pass1 = getPasswordFromUser();
+                    cout << "Confirm password: ";
+                    pass2 = getPasswordFromUser();
+                    if(pass1 == pass2) {
+                        ADMIN_PASSWORD = pass1;
+                        FileManager::writeConfig();
+                        cout << "Password changed successfully" << endl;
+                    } else {
+                        cout << "Invalid Password" << endl;
+                    }
+                    cout << "Press any key to exit...";
+                    _getch();
+                    clearConsole();
                     break;
 
                 case 9:
@@ -1289,8 +1358,11 @@ class App : protected State {
         clearConsole();
         int userInput;
 
+        double fineAmt;
+        int allowedDays;
+
         do{
-            cout << "1.Pay Fine \n2.Fine per day \n3.Exit" << endl;
+            cout << "1.Pay Fine \n2.Fine per day \n3.Allowed Days to keep book \n4.Exit" << endl;
             cout << "Enter your choice: ";
             cin >> userInput;
 
@@ -1310,10 +1382,30 @@ class App : protected State {
                     break;
 
                 case 2:
-                    // Fines per day
+                    clearConsole();
+                    cout << "Enter new fine amount: ";
+                    cin >> fineAmt;
+                    FINE_PER_DAY = fineAmt;
+                    FileManager::writeConfig();
+                    cout << "Fine Amount changed successfully" << endl;
+                    cout << "Press any key to exit...";
+                    _getch();
+                    clearConsole();
+                    break;
+                
+                case 3:
+                    clearConsole();
+                    cout << "Enter new allowed days to keep books: ";
+                    cin >> allowedDays;
+                    ALLOWED_DAYS_TO_KEEP_BOOK = allowedDays;
+                    FileManager::writeConfig();
+                    cout << "Fine Amount changed successfully" << endl;
+                    cout << "Press any key to exit...";
+                    _getch();
+                    clearConsole();
                     break;
 
-                case 3:
+                case 4:
                     clearConsole();
                     return;
                     break;
@@ -1322,15 +1414,17 @@ class App : protected State {
                     cout << "\nEnter a valid choice";
                     break;
             }
-        } while(userInput != 3);
+        } while(userInput != 4);
     }
 
    public:
     App() {
+        FileManager::getSetConfig();
         State::readStateFromFiles();
     }
 
     ~App() {
+        FileManager::writeConfig();
         State::writeStateInFiles();
     }
 
@@ -1339,6 +1433,7 @@ class App : protected State {
     }
 
     void stop() {
+        FileManager::writeConfig();
         State::writeStateInFiles();
     }
 };
