@@ -10,14 +10,10 @@
 
 using namespace std;
 
-namespace configuration {
-    string ADMIN_PASSWORD = "pass";
+string ADMIN_PASSWORD = "pass";
 
-    double FINE_PER_DAY = 100;
-    int ALLOWED_DAYS_TO_KEEP_BOOK = 7;
-}
-
-using namespace configuration;
+double FINE_PER_DAY = 100;
+int ALLOWED_DAYS_TO_KEEP_BOOK = 7;
 
 DateFormat DATE_FORMAT("dd-mm-yyyy");
 const Date NULL_DATE(D01, Jan, 1950);
