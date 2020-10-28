@@ -2,15 +2,15 @@
 
 using namespace std;
 
-template <typename T> void println(T var) {
+template <typename T>
+void println(T var) {
     cout << var << endl;
 }
 
 int main() {
-    println(1);
-    println(22.25);
-    println("Hii");
-    println(false);
+    println<int>(10);
+    println<float>(10.393);
+    println<char>('a');
 
     return 0;
 }
