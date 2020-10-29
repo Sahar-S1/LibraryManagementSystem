@@ -19,10 +19,6 @@ int ALLOWED_DAYS_TO_KEEP_BOOK = 7;
 DateFormat DATE_FORMAT("dd-mm-yyyy");
 const Date NULL_DATE(D01, Jan, 1950);
 
-const Student NULL_STUDENT = Student("", "", "", "");
-const Book NULL_BOOK = Book("", "", "", "", "", 0);
-const Issue NULL_ISSUE = Issue("", "", NULL_DATE);
-
 template <typename T>
 T stringTo(const string &str) {
     istringstream ss(str);
@@ -468,6 +464,14 @@ class Issue {
 };
 
 /* Issue Class => End */
+
+/* Constant Null Variables => Start */
+
+const Student NULL_STUDENT("", "", "", "");
+const Book NULL_BOOK("", "", "", "", "", 0);
+const Issue NULL_ISSUE("", "", NULL_DATE);
+
+/* Constant Null Variables => End*/
 
 /* FileManager Class => Start */
 
