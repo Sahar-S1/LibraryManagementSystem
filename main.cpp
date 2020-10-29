@@ -48,7 +48,16 @@ vector<string> split(const string &s, char delim) {
 Date getDateFromUser() {
     string dateInput;
     cin >> dateInput;
-    Date date(dateInput.c_str());
+
+    Date date = NULL_DATE;
+    
+    try {
+        date = Date(dateInput.c_str());
+    } catch (const invalid_argument& ia) {
+        cout << "Invalid Argument: " << ia.what() << endl;
+        exit(0);
+    }
+
     return date;
 }
 
