@@ -1,10 +1,11 @@
+#include <conio.h>
+#include <time.h>
+
 #include <fstream>
 #include <iostream>
 #include <sstream>
 #include <string>
 #include <vector>
-#include <conio.h>
-#include <time.h>
 
 #include "packages/Date.h"  // https://github.com/Avikalp7/Date-Class
 
@@ -17,6 +18,10 @@ int ALLOWED_DAYS_TO_KEEP_BOOK = 7;
 
 DateFormat DATE_FORMAT("dd-mm-yyyy");
 const Date NULL_DATE(D01, Jan, 1950);
+
+const Student NULL_STUDENT = Student("", "", "", "");
+const Book NULL_BOOK = Book("", "", "", "", "", 0);
+const Issue NULL_ISSUE = Issue("", "", NULL_DATE);
 
 template <typename T>
 T stringTo(const string &str) {
@@ -50,10 +55,10 @@ Date getDateFromUser() {
     cin >> dateInput;
 
     Date date = NULL_DATE;
-    
+
     try {
         date = Date(dateInput.c_str());
-    } catch (const invalid_argument& ia) {
+    } catch (const invalid_argument &ia) {
         cout << "Invalid Argument: " << ia.what() << endl;
         exit(0);
     }
@@ -62,19 +67,16 @@ Date getDateFromUser() {
 }
 
 string getPasswordFromUser() {
-    const char BACKSPACE = 8;//ASCII code for BACKSPACE Key
-    const char ENTER = 13;//ASCII code for ENTER Key
-    string pass = "";//initialize string
-    char c = ' ';//initialize character 
+    const char BACKSPACE = 8;  //ASCII code for BACKSPACE Key
+    const char ENTER = 13;     //ASCII code for ENTER Key
+    string pass = "";          //initialize string
+    char c = ' ';              //initialize character
 
-    while ((c = _getch()) != ENTER)
-    {
-        if (c == BACKSPACE)
-        {
-            if (pass.length() != 0)
-            {
+    while ((c = _getch()) != ENTER) {
+        if (c == BACKSPACE) {
+            if (pass.length() != 0) {
                 cout << "\b \b";
-                pass.resize(pass.length() - 1); //resize the length of pass 
+                pass.resize(pass.length() - 1);  //resize the length of pass
             }
         }
         // else if (c == 0 || c == 224)//when user press esc key
@@ -82,8 +84,7 @@ string getPasswordFromUser() {
         //     _getch();
         //     continue;
         // }
-        else
-        {
+        else {
             pass.push_back(c);
             cout << '*';
         }
@@ -108,7 +109,7 @@ void clearConsole() {
 /* Config Class => Start */
 
 class Config {
-  public:
+   public:
     static string getConfigString() {
         string str = "";
         str += ADMIN_PASSWORD;
@@ -468,31 +469,6 @@ class Issue {
 
 /* Issue Class => End */
 
-/* NullChecker Class => Start */
-
-class NullChecker {
-   public:
-    static const Student NULL_STUDENT;
-    static const Book NULL_BOOK;
-    static const Issue NULL_ISSUE;
-
-    static bool isStudentNull(Student student) {
-        return student == NULL_STUDENT;
-    }
-    static bool isBookNull(Book book) {
-        return book == NULL_BOOK;
-    }
-    static bool isIssueNull(Issue issue) {
-        return issue == NULL_ISSUE;
-    }
-};
-
-const Student NullChecker::NULL_STUDENT = Student("", "", "", "");
-const Book NullChecker::NULL_BOOK = Book("", "", "", "", "", 0);
-const Issue NullChecker::NULL_ISSUE = Issue("", "", NULL_DATE);
-
-/* NullChecker Class => End */
-
 /* FileManager Class => Start */
 
 class FileManager {
@@ -559,7 +535,7 @@ class FileManager {
 
         string temp;
         getline(fin, temp);
-        
+
         getline(fin, temp);
         Config::setConfig(temp);
     }
@@ -637,7 +613,7 @@ class Query {
                 return students[i];
             }
         }
-        return NullChecker::NULL_STUDENT;
+        return NULL_STUDENT;
     }
 
     static Book getBookByISBN(vector<Book> books, string isbn) {
@@ -646,7 +622,7 @@ class Query {
                 return books[i];
             }
         }
-        return NullChecker::NULL_BOOK;
+        return NULL_BOOK;
     }
 
     static vector<Book> getBooksByName(vector<Book> books, string name) {
@@ -756,20 +732,20 @@ class State {
         return this->issues;
     }
 
-    Student* getStudentAt(int index) {
+    Student *getStudentAt(int index) {
         return &this->students[index];
     }
-    Book* getBookAt(int index) {
+    Book *getBookAt(int index) {
         return &this->books[index];
     }
-    Issue* getIssueAt(int index) {
+    Issue *getIssueAt(int index) {
         return &this->issues[index];
     }
 
     void addStudent(Student student) {
         bool isStudentUnique = true;
         for (int i = 0; i < this->students.size(); i++) {
-            if(this->students[i].getRollID() == student.getRollID()) {
+            if (this->students[i].getRollID() == student.getRollID()) {
                 isStudentUnique = false;
             }
         }
@@ -781,13 +757,13 @@ class State {
         } else {
             cout << "Already a student with rollID " << student.getRollID() << endl;
             cout << "Failed to add " << student.getName() << endl;
-        }        
+        }
     }
 
     void addBook(Book book) {
         bool isBookUnique = true;
         for (int i = 0; i < this->books.size(); i++) {
-            if(this->books[i].getISBN() == book.getISBN()) {
+            if (this->books[i].getISBN() == book.getISBN()) {
                 isBookUnique = false;
             }
         }
@@ -799,7 +775,7 @@ class State {
         } else {
             cout << "Already a book with ISBN number " << book.getISBN() << endl;
             cout << "Failed to add " << book.getName() << endl;
-        }        
+        }
     }
 
     void deleteBook(int idx) {
@@ -808,7 +784,7 @@ class State {
         FileManager::writeBooks(this->books);
         cout << "Successfully Deleted " << temp.getName() << " book" << endl;
     }
-    
+
     void deleteStudent(int idx) {
         Student temp = this->students[idx];
         this->students.erase(this->students.begin() + idx);
@@ -819,7 +795,7 @@ class State {
     void addIssue(Issue issue) {
         bool isStudentValid = false;
         for (int i = 0; i < this->students.size(); i++) {
-            if(this->students[i].getRollID() == issue.getStudentRollID()) {
+            if (this->students[i].getRollID() == issue.getStudentRollID()) {
                 isStudentValid = true;
                 break;
             }
@@ -827,15 +803,15 @@ class State {
 
         bool isBookValid = false;
         for (int i = 0; i < this->books.size(); i++) {
-            if(this->books[i].getISBN() == issue.getBookISBN()) {
+            if (this->books[i].getISBN() == issue.getBookISBN()) {
                 isBookValid = true;
                 break;
             }
         }
-        
+
         bool isBookAvailable = false;
         if (isBookValid) {
-            Book thisBook = Query::getBookByISBN(this->books ,issue.getBookISBN());
+            Book thisBook = Query::getBookByISBN(this->books, issue.getBookISBN());
             vector<Issue> thisBookIssues = Query::getIssuesByBookISBN(this->issues, thisBook.getISBN());
             vector<Issue> thisBookPendingReturnIssues = Query::getIssuesByPendingReturn(thisBookIssues);
             int thisBookPendingReturnIssuesCount = thisBookPendingReturnIssues.size();
@@ -846,10 +822,10 @@ class State {
         Student thisStudent("", "", "", "");
         Book thisBook("", "", "", "", "", 0);
         if (isStudentValid) {
-            thisStudent = Query::getStudentByRollID(this->students ,issue.getStudentRollID());
+            thisStudent = Query::getStudentByRollID(this->students, issue.getStudentRollID());
         }
         if (isBookValid) {
-            thisBook = Query::getBookByISBN(this->books ,issue.getBookISBN());
+            thisBook = Query::getBookByISBN(this->books, issue.getBookISBN());
         }
 
         bool isIssueValid = isStudentValid && isBookValid && isBookAvailable;
@@ -874,13 +850,13 @@ class State {
 
     string getIssueIDFromUser(vector<Issue> issues, string message) {
         int userInput;
-        
+
         this->displayIssues(issues);
-        
+
         cout << message;
         cin >> userInput;
 
-        return issues[userInput-1].getIssueID();
+        return issues[userInput - 1].getIssueID();
     }
 
     void returnBook(string issueID) {
@@ -893,8 +869,8 @@ class State {
                 issueIdx = i;
             }
         }
-    
-        if(isIssueIdValid) {
+
+        if (isIssueIdValid) {
             this->issues[issueIdx].getReturnDetailsFromUser();
             cout << "Return Successful!" << endl;
         } else {
@@ -912,8 +888,8 @@ class State {
                 issueIdx = i;
             }
         }
-    
-        if(isIssueIdValid) {
+
+        if (isIssueIdValid) {
             this->issues[issueIdx].payFine();
             cout << "Fine Paid Successful!" << endl;
         } else {
@@ -924,7 +900,7 @@ class State {
     void displayStudents(vector<Student> students) {
         cout << "RollID Name Branch" << endl;
         for (int i = 0; i < students.size(); i++) {
-            cout << (i+1) << ". ";
+            cout << (i + 1) << ". ";
             cout << students[i].getRollID() << " ";
             cout << students[i].getName() << " ";
             cout << students[i].getBranch() << endl;
@@ -933,7 +909,7 @@ class State {
     void displayBooks(vector<Book> books) {
         cout << "ISBN Name Author xQuantity" << endl;
         for (int i = 0; i < books.size(); i++) {
-            cout << (i+1) << ". ";
+            cout << (i + 1) << ". ";
             cout << books[i].getISBN() << " ";
             cout << books[i].getName() << " ";
             cout << books[i].getAuthor() << " ";
@@ -945,13 +921,13 @@ class State {
         cout << "FineAmount Paid/NotPaid" << endl;
         cout << endl;
         for (int i = 0; i < issues.size(); i++) {
-            cout << (i+1) << ". ";
-            cout << Query::getBookByISBN(books,issues[i].getBookISBN()).getName() << " ";
-            cout << Query::getStudentByRollID(students,issues[i].getStudentRollID()).getName() << " ";
+            cout << (i + 1) << ". ";
+            cout << Query::getBookByISBN(books, issues[i].getBookISBN()).getName() << " ";
+            cout << Query::getStudentByRollID(students, issues[i].getStudentRollID()).getName() << " ";
             cout << issues[i].getIssueDate() << " ";
             cout << (issues[i].getIsReturned() ? "Not Returned" : toString<Date>(issues[i].getReturnDate())) << endl;
-            
-            cout << (i+1) << ". ";
+
+            cout << (i + 1) << ". ";
             cout << issues[i].getFineAmount() << " ";
             cout << (issues[i].getIsFinePaid() ? "Paid" : "Not Paid") << endl;
 
@@ -960,17 +936,21 @@ class State {
     }
 
     bool validateAdmin(string password) {
-        if(password == ADMIN_PASSWORD) return true;
-        else return false;
+        if (password == ADMIN_PASSWORD)
+            return true;
+        else
+            return false;
     }
     bool validateStudent(string rollID, string password) {
-        if(Query::getStudentByRollID(students, rollID).validatePassword(password)) return true;
-        else return false;
+        if (Query::getStudentByRollID(students, rollID).validatePassword(password))
+            return true;
+        else
+            return false;
     }
 
     void changePassword(string rollID, string pass) {
         for (int i = 0; i < this->students.size(); i++) {
-            if(students[i].getRollID() == rollID) {
+            if (students[i].getRollID() == rollID) {
                 students[i].resetPassword(pass);
                 FileManager::writeStudents(this->students);
                 return;
@@ -1036,18 +1016,18 @@ class App : protected State {
     void showStudentMenu(string rollID) {
         clearConsole();
         int userInput;
-    
-        do{
-            cout << "1.Search \n2.Issue history \n3.Pending Books to be returned \n4.Pending Fines \n5.Reset Password \n6.Exit" << endl ;
+
+        do {
+            cout << "1.Search \n2.Issue history \n3.Pending Books to be returned \n4.Pending Fines \n5.Reset Password \n6.Exit" << endl;
             cout << "Enter your choice: ";
             cin >> userInput;
 
             string pass1, pass2;
-            switch(userInput) {
+            switch (userInput) {
                 case 1:
                     this->showSearchBookMenu();
                     break;
-                
+
                 case 2:
                     clearConsole();
                     State::displayIssues(Query::getIssuesByStudentRollID(State::getIssues(), rollID));
@@ -1078,7 +1058,7 @@ class App : protected State {
                     pass1 = getPasswordFromUser();
                     cout << "Confirm password: ";
                     pass2 = getPasswordFromUser();
-                    if(pass1 == pass2) {
+                    if (pass1 == pass2) {
                         State::changePassword(rollID, pass1);
                         cout << "Password changed successfully" << endl;
                     } else {
@@ -1097,23 +1077,22 @@ class App : protected State {
                     cout << "Enter a valid choice" << endl;
                     break;
             }
-        } while(userInput != 6);
+        } while (userInput != 6);
     }
 
     void showAdminMenu() {
         clearConsole();
         int userInput;
         string rollID;
-    
+
         do {
-            cout << "1.Issue \n2.Return \n3.Add New \n4.Delete \n5.Issue History \n6.Pending Books to be returned \n7.Manage Fines \n8.Reset Password \n9.Student Login \n10.Exit" << endl ;
+            cout << "1.Issue \n2.Return \n3.Add New \n4.Delete \n5.Issue History \n6.Pending Books to be returned \n7.Manage Fines \n8.Reset Password \n9.Student Login \n10.Exit" << endl;
             cout << "Enter your choice: ";
             cin >> userInput;
 
             string pass1, pass2;
 
-            switch(userInput)
-            {
+            switch (userInput) {
                 case 1:
                     clearConsole();
                     State::addIssue(Issue::getIssueObjDetailsFromUser());
@@ -1121,15 +1100,13 @@ class App : protected State {
                     _getch();
                     clearConsole();
                     break;
-                
+
                 case 2:
                     clearConsole();
                     State::returnBook(
                         State::getIssueIDFromUser(
                             Query::getIssuesByPendingReturn(State::getIssues()),
-                            "Select Which Book to be Returned: "
-                        )
-                    );
+                            "Select Which Book to be Returned: "));
                     cout << "Press any key to exit...";
                     _getch();
                     clearConsole();
@@ -1169,7 +1146,7 @@ class App : protected State {
                     pass1 = getPasswordFromUser();
                     cout << "Confirm password: ";
                     pass2 = getPasswordFromUser();
-                    if(pass1 == pass2) {
+                    if (pass1 == pass2) {
                         ADMIN_PASSWORD = pass1;
                         FileManager::writeConfig();
                         cout << "Password changed successfully" << endl;
@@ -1196,14 +1173,14 @@ class App : protected State {
                     cout << "Enter a valid choice" << endl;
                     break;
             }
-        } while(userInput != 10);
+        } while (userInput != 10);
     }
 
     void showSearchBookMenu() {
         clearConsole();
         int userInput;
 
-        do{
+        do {
             cout << "1.By Author \n2.By Publisher \n3.By Genre \n4.By Name \n5.All \n6.Exit" << endl;
             cout << "Enter your choice: ";
             cin >> userInput;
@@ -1220,7 +1197,7 @@ class App : protected State {
                     cout << "Press any key to exit...";
                     _getch();
                     clearConsole();
-                break;
+                    break;
 
                 case 2:
                     clearConsole();
@@ -1231,7 +1208,7 @@ class App : protected State {
                     cout << "Press any key to exit...";
                     _getch();
                     clearConsole();
-                break;
+                    break;
 
                 case 3:
                     clearConsole();
@@ -1242,7 +1219,7 @@ class App : protected State {
                     cout << "Press any key to exit...";
                     _getch();
                     clearConsole();
-                break;
+                    break;
 
                 case 4:
                     clearConsole();
@@ -1253,7 +1230,7 @@ class App : protected State {
                     cout << "Press any key to exit...";
                     _getch();
                     clearConsole();
-                break;
+                    break;
 
                 case 5:
                     clearConsole();
@@ -1261,7 +1238,7 @@ class App : protected State {
                     cout << "Press any key to exit...";
                     _getch();
                     clearConsole();
-                break;
+                    break;
 
                 case 6:
                     clearConsole();
@@ -1272,14 +1249,14 @@ class App : protected State {
                     cout << "\nEnter a valid choice";
                     break;
             }
-        } while(userInput != 6);
+        } while (userInput != 6);
     }
 
     void showAddNewMenu() {
         clearConsole();
         int userInput;
 
-        do{
+        do {
             cout << "1.Book \n2.Student \n3.Exit" << endl;
             cout << "Enter your choice: ";
             cin >> userInput;
@@ -1310,14 +1287,14 @@ class App : protected State {
                     cout << "\nEnter a valid choice";
                     break;
             }
-        } while(userInput != 3);
+        } while (userInput != 3);
     }
 
     void showDeleteMenu() {
         clearConsole();
         int userInput;
 
-        do{
+        do {
             cout << "1.Book \n2.Student \n3.Exit" << endl;
             cout << "Enter your choice: ";
             cin >> userInput;
@@ -1330,7 +1307,7 @@ class App : protected State {
                     State::displayBooks(State::getBooks());
                     cout << "Select which book to delete: ";
                     cin >> deleteIdx;
-                    State::deleteBook((deleteIdx-1));
+                    State::deleteBook((deleteIdx - 1));
                     cout << "Press any key to exit...";
                     _getch();
                     clearConsole();
@@ -1341,7 +1318,7 @@ class App : protected State {
                     State::displayStudents(State::getStudents());
                     cout << "Select which student to delete: ";
                     cin >> deleteIdx;
-                    State::deleteStudent((deleteIdx-1));
+                    State::deleteStudent((deleteIdx - 1));
                     cout << "Press any key to exit...";
                     _getch();
                     clearConsole();
@@ -1356,7 +1333,7 @@ class App : protected State {
                     cout << "\nEnter a valid choice";
                     break;
             }
-        } while(userInput != 3);
+        } while (userInput != 3);
     }
 
     void showManageFinesMenu() {
@@ -1366,21 +1343,18 @@ class App : protected State {
         double fineAmt;
         int allowedDays;
 
-        do{
+        do {
             cout << "1.Pay Fine \n2.Fine per day \n3.Allowed Days to keep book \n4.Exit" << endl;
             cout << "Enter your choice: ";
             cin >> userInput;
 
-            switch (userInput)
-            {
+            switch (userInput) {
                 case 1:
                     clearConsole();
                     State::payFine(
                         State::getIssueIDFromUser(
                             Query::getIssuesByPendingFine(State::getIssues()),
-                            "Select Which Fine is to be Paid: "
-                        )
-                    );
+                            "Select Which Fine is to be Paid: "));
                     cout << "Press any key to exit...";
                     _getch();
                     clearConsole();
@@ -1397,7 +1371,7 @@ class App : protected State {
                     _getch();
                     clearConsole();
                     break;
-                
+
                 case 3:
                     clearConsole();
                     cout << "Enter new allowed days to keep books: ";
@@ -1419,7 +1393,7 @@ class App : protected State {
                     cout << "\nEnter a valid choice";
                     break;
             }
-        } while(userInput != 4);
+        } while (userInput != 4);
     }
 
    public:
@@ -1452,7 +1426,7 @@ int main() {
     App app;
 
     app.start();
-    
+
     app.stop();
 
     return 0;
