@@ -11,11 +11,6 @@
 
 using namespace std;
 
-string ADMIN_PASSWORD = "pass";
-
-double FINE_PER_DAY = 100;
-int ALLOWED_DAYS_TO_KEEP_BOOK = 7;
-
 DateFormat DATE_FORMAT("dd-mm-yyyy");
 const Date NULL_DATE(D01, Jan, 1950);
 
@@ -106,21 +101,31 @@ void clearConsole() {
 
 class Config {
    public:
+    static string ADMIN_PASSWORD;
+
+    static double FINE_PER_DAY;
+    static int ALLOWED_DAYS_TO_KEEP_BOOK;
+
     static string getConfigString() {
         string str = "";
-        str += ADMIN_PASSWORD;
-        str += "," + toString<double>(FINE_PER_DAY);
-        str += "," + toString<int>(ALLOWED_DAYS_TO_KEEP_BOOK);
+        str += Config::ADMIN_PASSWORD;
+        str += "," + toString<double>(Config::FINE_PER_DAY);
+        str += "," + toString<int>(Config::ALLOWED_DAYS_TO_KEEP_BOOK);
         return str;
     }
 
     static void setConfig(string config) {
         vector<string> configAttr = split(config, ',');
-        ADMIN_PASSWORD = configAttr[0];
-        FINE_PER_DAY = stringTo<double>(configAttr[1]);
-        ALLOWED_DAYS_TO_KEEP_BOOK = stringTo<int>(configAttr[2]);
+        Config::ADMIN_PASSWORD = configAttr[0];
+        Config::FINE_PER_DAY = stringTo<double>(configAttr[1]);
+        Config::ALLOWED_DAYS_TO_KEEP_BOOK = stringTo<int>(configAttr[2]);
     }
 };
+
+string Config::ADMIN_PASSWORD = "pass";
+
+double Config::FINE_PER_DAY = 100;
+int Config::ALLOWED_DAYS_TO_KEEP_BOOK = 7;
 
 /* Config Class => End */
 
@@ -398,7 +403,7 @@ class Issue {
 
         this->returnDate = returnDate;
         this->isReturned = true;
-        this->fineAmount = (dateDiff > ALLOWED_DAYS_TO_KEEP_BOOK) ? (dateDiff - ALLOWED_DAYS_TO_KEEP_BOOK) * FINE_PER_DAY : 0;
+        this->fineAmount = (dateDiff > Config::ALLOWED_DAYS_TO_KEEP_BOOK) ? (dateDiff - Config::ALLOWED_DAYS_TO_KEEP_BOOK) * Config::FINE_PER_DAY : 0;
         this->isFinePaid = (fineAmount > 0) ? false : true;
     }
 
@@ -940,7 +945,7 @@ class State {
     }
 
     bool validateAdmin(string password) {
-        if (password == ADMIN_PASSWORD)
+        if (password == Config::ADMIN_PASSWORD)
             return true;
         else
             return false;
@@ -1151,7 +1156,7 @@ class App : protected State {
                     cout << "Confirm password: ";
                     pass2 = getPasswordFromUser();
                     if (pass1 == pass2) {
-                        ADMIN_PASSWORD = pass1;
+                        Config::ADMIN_PASSWORD = pass1;
                         FileManager::writeConfig();
                         cout << "Password changed successfully" << endl;
                     } else {
@@ -1368,7 +1373,7 @@ class App : protected State {
                     clearConsole();
                     cout << "Enter new fine amount: ";
                     cin >> fineAmt;
-                    FINE_PER_DAY = fineAmt;
+                    Config::FINE_PER_DAY = fineAmt;
                     FileManager::writeConfig();
                     cout << "Fine Amount changed successfully" << endl;
                     cout << "Press any key to exit...";
@@ -1380,7 +1385,7 @@ class App : protected State {
                     clearConsole();
                     cout << "Enter new allowed days to keep books: ";
                     cin >> allowedDays;
-                    ALLOWED_DAYS_TO_KEEP_BOOK = allowedDays;
+                    Config::ALLOWED_DAYS_TO_KEEP_BOOK = allowedDays;
                     FileManager::writeConfig();
                     cout << "Fine Amount changed successfully" << endl;
                     cout << "Press any key to exit...";
