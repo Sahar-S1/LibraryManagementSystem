@@ -196,8 +196,13 @@ class Student {
         return this->password == pass;
     }
 
-    void resetPassword(string newPassword) {
-        this->password = newPassword;
+    bool resetPassword(string oldPassword, string newPassword) {
+        bool success = false;
+        if (validatePassword(oldPassword)) {
+            this->password = newPassword;
+            success = true;
+        }
+        return success;
     }
 
     friend bool operator==(const Student &student1, const Student &student2) {
@@ -957,11 +962,16 @@ class State {
             return false;
     }
 
-    void changePassword(string rollID, string pass) {
+    void changePassword(string rollID, string oldPass, string newPass) {
         for (int i = 0; i < this->students.size(); i++) {
             if (students[i].getRollID() == rollID) {
-                students[i].resetPassword(pass);
-                FileManager::writeStudents(this->students);
+                if (students[i].resetPassword(oldPass, newPass)) {
+                    cout << "Password Changed Successfully" << endl;
+                    FileManager::writeStudents(this->students);
+                } else {
+                    cout << "Old Password Invalid!" << endl;
+                    cout << "Password Change Failed" << endl;
+                }
                 return;
             }
         }
@@ -1031,7 +1041,8 @@ class App : protected State {
             cout << "Enter your choice: ";
             cin >> userInput;
 
-            string pass1, pass2;
+            string oldPass;
+            string newPass1, newPass2;
             switch (userInput) {
                 case 1:
                     this->showSearchBookMenu();
@@ -1063,15 +1074,17 @@ class App : protected State {
 
                 case 5:
                     clearConsole();
+                    cout << "Enter oldPassword: ";
+                    oldPass = getPasswordFromUser();
                     cout << "Enter new password: ";
-                    pass1 = getPasswordFromUser();
+                    newPass1 = getPasswordFromUser();
                     cout << "Confirm password: ";
-                    pass2 = getPasswordFromUser();
-                    if (pass1 == pass2) {
-                        State::changePassword(rollID, pass1);
-                        cout << "Password changed successfully" << endl;
+                    newPass2 = getPasswordFromUser();
+                    if (newPass1 == newPass2) {
+                        State::changePassword(rollID, oldPass, newPass1);
                     } else {
-                        cout << "Invalid Password" << endl;
+                        cout << "Confirm Password is not same is New Password!" << endl;
+                        cout << "Password Change Failed" << endl;
                     }
                     cout << "Press any key to exit...";
                     _getch();
