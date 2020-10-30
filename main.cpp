@@ -746,21 +746,12 @@ class State {
         return this->issues;
     }
 
-    Student *getStudentAt(int index) {
-        return &this->students[index];
-    }
-    Book *getBookAt(int index) {
-        return &this->books[index];
-    }
-    Issue *getIssueAt(int index) {
-        return &this->issues[index];
-    }
-
     void addStudent(Student student) {
         bool isStudentUnique = true;
         for (int i = 0; i < this->students.size(); i++) {
             if (this->students[i].getRollID() == student.getRollID()) {
                 isStudentUnique = false;
+                break;
             }
         }
 
@@ -779,6 +770,7 @@ class State {
         for (int i = 0; i < this->books.size(); i++) {
             if (this->books[i].getISBN() == book.getISBN()) {
                 isBookUnique = false;
+                break;
             }
         }
 
@@ -807,56 +799,49 @@ class State {
     }
 
     void addIssue(Issue issue) {
-        bool isStudentValid = false;
+        bool isStudentExists = false;
         for (int i = 0; i < this->students.size(); i++) {
             if (this->students[i].getRollID() == issue.getStudentRollID()) {
-                isStudentValid = true;
+                isStudentExists = true;
                 break;
             }
         }
 
-        bool isBookValid = false;
+        bool isBookExists = false;
         for (int i = 0; i < this->books.size(); i++) {
             if (this->books[i].getISBN() == issue.getBookISBN()) {
-                isBookValid = true;
+                isBookExists = true;
                 break;
             }
         }
 
         bool isBookAvailable = false;
-        if (isBookValid) {
+        if (isBookExists) {
             Book thisBook = Query::getBookByISBN(this->books, issue.getBookISBN());
             vector<Issue> thisBookIssues = Query::getIssuesByBookISBN(this->issues, thisBook.getISBN());
             vector<Issue> thisBookPendingReturnIssues = Query::getIssuesByPendingReturn(thisBookIssues);
             int thisBookPendingReturnIssuesCount = thisBookPendingReturnIssues.size();
-            cout << thisBookPendingReturnIssuesCount;
             isBookAvailable = (thisBook.getQuantity() - thisBookPendingReturnIssuesCount >= 1) ? true : false;
         }
 
-        Student thisStudent("", "", "", "");
-        Book thisBook("", "", "", "", "", 0);
-        if (isStudentValid) {
-            thisStudent = Query::getStudentByRollID(this->students, issue.getStudentRollID());
-        }
-        if (isBookValid) {
-            thisBook = Query::getBookByISBN(this->books, issue.getBookISBN());
-        }
+        Student thisStudent = Query::getStudentByRollID(this->students, issue.getStudentRollID());
+        Book thisBook = Query::getBookByISBN(this->books, issue.getBookISBN());
 
-        bool isIssueValid = isStudentValid && isBookValid && isBookAvailable;
+        bool isIssueValid = isStudentExists && isBookExists && isBookAvailable;
 
         if (isIssueValid) {
             this->issues.push_back(issue);
             FileManager::writeIssues(this->issues);
             cout << "Issue Successful!" << endl;
         } else {
-            if (!isStudentValid) {
+            if (!isStudentExists) {
                 cout << "Student with roll id " << issue.getStudentRollID() << " not found" << endl;
             }
-            if (!isBookValid) {
+            if (!isBookExists) {
                 cout << "Book with ISBN " << issue.getBookISBN() << " not found" << endl;
             }
-            if (isBookValid && !isBookAvailable) {
-                cout << "Sorry!, " << thisBook.getName() << " book is not avaliable" << endl;
+            if (isBookExists && !isBookAvailable) {
+                cout << "Sorry!, " << thisBook.getName() << " book is not avaliable right now" << endl;
             }
             cout << "Issue Failed" << endl;
         }
@@ -876,15 +861,14 @@ class State {
     void returnBook(string issueID) {
         int issueIdx = -1;
 
-        bool isIssueIdValid = false;
         for (int i = 0; i < this->issues.size(); i++) {
             if (this->issues[i].getIssueID() == issueID) {
-                isIssueIdValid = true;
                 issueIdx = i;
+                break;
             }
         }
 
-        if (isIssueIdValid) {
+        if (issueIdx != -1) { // if issue with this issueID exists
             this->issues[issueIdx].getReturnDetailsFromUser();
             cout << "Return Successful!" << endl;
         } else {
@@ -895,15 +879,14 @@ class State {
     void payFine(string issueID) {
         int issueIdx = -1;
 
-        bool isIssueIdValid = false;
         for (int i = 0; i < this->issues.size(); i++) {
             if (this->issues[i].getIssueID() == issueID) {
-                isIssueIdValid = true;
                 issueIdx = i;
+                break;
             }
         }
 
-        if (isIssueIdValid) {
+        if (issueIdx != -1) { // if issue with this issueID exists
             this->issues[issueIdx].payFine();
             cout << "Fine Paid Successful!" << endl;
         } else {
@@ -956,13 +939,13 @@ class State {
             return false;
     }
     bool validateStudent(string rollID, string password) {
-        if (Query::getStudentByRollID(students, rollID).validatePassword(password))
+        if (Query::getStudentByRollID(this->students, rollID).validatePassword(password))
             return true;
         else
             return false;
     }
 
-    void changePassword(string rollID, string oldPass, string newPass) {
+    void changeStudentPassword(string rollID, string oldPass, string newPass) {
         for (int i = 0; i < this->students.size(); i++) {
             if (students[i].getRollID() == rollID) {
                 if (students[i].resetPassword(oldPass, newPass)) {
@@ -1010,7 +993,7 @@ class App : protected State {
 
                     break;
 
-                case 2:;
+                case 2:
                     cout << "Enter Password: ";
                     password = getPasswordFromUser();
 
@@ -1081,7 +1064,7 @@ class App : protected State {
                     cout << "Confirm password: ";
                     newPass2 = getPasswordFromUser();
                     if (newPass1 == newPass2) {
-                        State::changePassword(rollID, oldPass, newPass1);
+                        State::changeStudentPassword(rollID, oldPass, newPass1);
                     } else {
                         cout << "Confirm Password is not same is New Password!" << endl;
                         cout << "Password Change Failed" << endl;
@@ -1445,11 +1428,11 @@ int main() {
     // Define the format in which Date objects are input and output
     Date::setFormat(DATE_FORMAT);
 
-    App app;
+    App app; // This loads all the files data in app
 
-    app.start();
+    app.start(); // This shows the menu
 
-    app.stop();
+    app.stop(); // This writes all the app data in files
 
     return 0;
 }
