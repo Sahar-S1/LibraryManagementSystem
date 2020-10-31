@@ -205,10 +205,6 @@ class Student {
         return success;
     }
 
-    friend bool operator==(const Student &student1, const Student &student2) {
-        return student1.roll_Id == student2.roll_Id && student1.name == student2.name && student1.branch == student2.branch && student1.password == student2.password;
-    }
-
     friend ostream &operator<<(ostream &output, const Student &studentObj) {
         string str = "";
 
@@ -310,10 +306,6 @@ class Book {
 
         Book bookObj(bookAttr[0], bookAttr[1], bookAttr[2], bookAttr[3], bookAttr[4], stringTo<int>(bookAttr[5]));
         return bookObj;
-    }
-
-    friend bool operator==(const Book &book1, const Book &book2) {
-        return book1.isbnNumber == book2.isbnNumber && book1.name == book2.name && book1.author == book2.author && book1.publisher == book2.publisher && book1.genere == book2.genere && book1.quantity == book2.quantity;
     }
 
     friend ostream &operator<<(ostream &output, const Book &bookObj) {
@@ -449,10 +441,6 @@ class Issue {
 
         Issue issue(issueAttr[0], issueAttr[1], issueAttr[2], Date(issueAttr[3].c_str()), Date(issueAttr[4].c_str()), stringTo<bool>(issueAttr[5]), stringTo<double>(issueAttr[6]), stringTo<bool>(issueAttr[7]));
         return issue;
-    }
-
-    friend bool operator==(const Issue &issue1, const Issue &issue2) {
-        return issue1.bookISBN == issue2.bookISBN && issue1.studentRollID == issue2.studentRollID && (Date)issue1.issueDate == (Date)issue2.issueDate && (Date)issue1.returnDate == (Date)issue2.returnDate && issue1.isReturned == issue2.isReturned && issue1.isFinePaid == issue2.isFinePaid && issue1.fineAmount == issue2.fineAmount;
     }
 
     friend ostream &operator<<(ostream &output, const Issue &issueObj) {
@@ -874,6 +862,8 @@ class State {
         } else {
             cout << "Return Failed due to some internal error (Invalid issueID = \"" << issueID << "\")" << endl;
         }
+
+        FileManager::writeIssues(this->issues);
     }
 
     void payFine(string issueID) {
@@ -892,6 +882,8 @@ class State {
         } else {
             cout << "Fine Pay Failed due to some internal error (Invalid issueID = \"" << issueID << "\")" << endl;
         }
+
+        FileManager::writeIssues(this->issues);
     }
 
     void displayStudents(vector<Student> students) {
@@ -922,7 +914,7 @@ class State {
             cout << Query::getBookByISBN(books, issues[i].getBookISBN()).getName() << " ";
             cout << Query::getStudentByRollID(students, issues[i].getStudentRollID()).getName() << " ";
             cout << issues[i].getIssueDate() << " ";
-            cout << (issues[i].getIsReturned() ? "Not Returned" : toString<Date>(issues[i].getReturnDate())) << endl;
+            cout << (!issues[i].getIsReturned() ? "Not Returned" : toString<Date>(issues[i].getReturnDate())) << endl;
 
             cout << (i + 1) << ". ";
             cout << issues[i].getFineAmount() << " ";
